@@ -4,12 +4,14 @@
 #include<iostream>
 #include<time.h>
 #include <stdlib.h>
+#include"Menu.h"
 int main() {
 	int oceanx=0;
 	srand(time(NULL));
 	sf::RenderWindow window(sf::VideoMode(1080, 720), "The marine", sf::Style::Default );
 	sf::RectangleShape player(sf::Vector2f(100.0f, 100.0f));
 	player.setPosition(250.0f,500.0f);
+	Menu menu(window.getSize().x,window.getSize().y);
 	
 	//scrolling bg
 	sf::Texture oceanTexture;
@@ -40,17 +42,22 @@ int main() {
 		{
 			switch (event.type)
 			{
-			case sf::Event::Closed:
-				window.close();
-				break;
-			case sf::Event::Resized:
-				printf("New window width: %d New window height: %d\n",event.size.width,event.size.height);
-				break;
-			case sf::Event::TextEntered:
-				if (event.text.unicode < 128)
+			case sf::Event::KeyReleased:
+				switch (event.key.code) 
 				{
-					printf("%c",event.text.unicode);
+					case sf::
 				}
+				case sf::Event::Closed:
+						window.close();
+						break;
+				case sf::Event::Resized:
+						printf("New window width: %d New window height: %d\n",event.size.width,event.size.height);
+						break;
+				case sf::Event::TextEntered:
+						if (event.text.unicode < 128)
+					{
+						printf("%c",event.text.unicode);
+					}
 			}
 			if (event.type == event.Closed)
 			{
@@ -86,11 +93,12 @@ int main() {
 		{
 			window.close();
 		}
-		/*window.setView(view_bg);*/
+		
 		window.clear();
-		window.draw(ocean1);
+		menu.draw(window);
+		/*window.draw(ocean1);
 		window.draw(ocean2);
-		window.draw(player);
+		window.draw(player);*/
 		window.display();
 	}
 	return 0;
