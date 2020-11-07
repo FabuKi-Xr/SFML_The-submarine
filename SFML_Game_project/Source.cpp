@@ -42,11 +42,8 @@ int main() {
 		{
 			switch (event.type)
 			{
-			case sf::Event::KeyReleased:
-				switch (event.key.code) 
-				{
-					case sf::
-				}
+			case sf::Event::KeyReleased: break;
+
 				case sf::Event::Closed:
 						window.close();
 						break;

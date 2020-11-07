@@ -145,12 +145,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Class.cpp" />
     <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="obstruct.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Class.h" />
     <ClInclude Include="Menu.h" />
-    <ClInclude Include="Obstruction.h" />
+    <ClInclude Include="obstruct.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
