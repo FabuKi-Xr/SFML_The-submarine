@@ -9,6 +9,7 @@ public:
 	void draw(sf::RenderWindow &window);
 	void MoveUp();
 	void MoveDown();
+	void button();
 
 private:
 	int selectedItemIndex;
