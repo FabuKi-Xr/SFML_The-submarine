@@ -1,7 +1,31 @@
 #include "bullet.h"
 #include<iostream>
 
-bullet::bullet(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed, sf::Vector2f pos) :
+bullet::bullet(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, sf::Vector2f position):animate(texture, imageCount, switchTime)
+{
+    body.setSize(sf::Vector2f(100.0f, 100.0f));
+    body.setScale(0.5,0.5);
+    body.setOrigin(body.getSize() / 2.0f);
+    body.setPosition(position);
+    body.setTexture(texture);
+}
+bullet::~bullet()
+{
+}
+void  bullet::update(float deltaTime)
+{
+    velocity.x = 200.0f;
+    this->row = row;
+   // animate.updatebullet(row, deltaTime);
+    body.setTextureRect(animate.uvRect);
+    body.move(velocity * deltaTime);
+}
+void bullet::draw(sf::RenderWindow& window)
+{
+    window.draw(body);
+
+}
+/*bullet::bullet(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed, sf::Vector2f pos) :
     animation(texture, imageCount, switchTime)
 {
     this->speed = speed;
@@ -14,19 +38,21 @@ bullet::bullet(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, 
 }
 bullet::~bullet()
 {
-}
+}*/
+
+/*
 void bullet::update(float deltaTime)
 {
 
     if (body.getPosition().x != NULL - 100 && body.getPosition().y != NULL - 100)
     {
-        body.move(0, * deltaTime);
-        animation.UpdateBullet(row, deltaTime);
-        body.setTextureRect(animation.uvRect);
+        body.move(0, deltaTime);
+        Animation.UpdateBullet(row, deltaTime);
+        body.setTextureRect(Animation.uvRect);
     }
 }
 
-void Bulletpoke::updateDOWN(float deltaTime)
+void bullet::updateDOWN(float deltaTime)
 {
     velocity.x = 0;
     velocity.y = speed * 2;
@@ -38,7 +64,7 @@ void Bulletpoke::updateDOWN(float deltaTime)
     }
 }
 
-void Bulletpoke::updateRIGHT(float deltaTime)
+void bullet::updateRIGHT(float deltaTime)
 {
     velocity.x = speed * 2;
     velocity.y = speed * 2;
@@ -50,7 +76,7 @@ void Bulletpoke::updateRIGHT(float deltaTime)
     }
 }
 
-void Bulletpoke::updateLEFT(float deltaTime)
+void bullet::updateLEFT(float deltaTime)
 {
     velocity.x = speed * 2;
     velocity.y = speed * 2;
@@ -63,28 +89,28 @@ void Bulletpoke::updateLEFT(float deltaTime)
 }
 
 
-void Bulletpoke::attackL(sf::Vector2f pos)
+void bullet::attackL(sf::Vector2f pos)
 {
     body.setPosition(pos.x - 53.0f, pos.y + 10.0f);
 
 }
-void Bulletpoke::attackR(sf::Vector2f pos) {
+void bullet::attackR(sf::Vector2f pos) {
     body.setPosition(pos.x + 53.0f, pos.y + 10.0f);
 
 }
-void Bulletpoke::attackU(sf::Vector2f pos) {
+void bullet::attackU(sf::Vector2f pos) {
     body.setPosition(pos.x, pos.y - 53.0f);
 }
-void Bulletpoke::attackD(sf::Vector2f pos) {
+void bullet::attackD(sf::Vector2f pos) {
     body.setPosition(pos.x, pos.y + 53.0f);
 }
 
-void Bulletpoke::deletepoke()
+void bullet::deletepoke()
 {
     body.setPosition(NULL - 100, NULL - 100);
 }
 
-void Bulletpoke::draw(sf::RenderWindow& window)
+void bullet::draw(sf::RenderWindow& window)
 {
     window.draw(body);
-}
+*/
