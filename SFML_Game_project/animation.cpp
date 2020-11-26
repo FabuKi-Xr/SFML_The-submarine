@@ -14,7 +14,6 @@ animation::animation(sf::Texture* texture, sf::Vector2u imageCount, float switch
 
 animation::~animation()
 {
-	//delete?
 
 };
 
@@ -33,6 +32,7 @@ void animation::update(int row,float deltatime)
 			currentImage.x = 0;
 		}
 	}
+	uvRect.left = currentImage.x * uvRect.width;
 	uvRect.top = currentImage.y * uvRect.height;
 	
 }
@@ -52,6 +52,26 @@ void animation::updatebullet(int row, float deltatime)
 			currentImage.x = 0;
 		}
 	}
+	uvRect.left = currentImage.x * uvRect.width;
+	uvRect.top = currentImage.y * uvRect.height;
+}
+
+void animation::updatehostile(int row, float deltatime)
+{
+	currentImage.y = row;
+	totaltime += deltatime;
+
+	if (totaltime >= switchtime)
+	{
+		totaltime -= switchtime;
+		currentImage.x++;
+
+		if (currentImage.x >= imageCount.x)
+		{
+			currentImage.x = 0;
+		}
+	}
+	uvRect.left = currentImage.x * uvRect.width;
 	uvRect.top = currentImage.y * uvRect.height;
 }
 void animation::render()

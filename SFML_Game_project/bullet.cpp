@@ -3,6 +3,7 @@
 
 bullet::bullet(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, sf::Vector2f position):animate(texture, imageCount, switchTime)
 {
+    this->row = 0;
     body.setSize(sf::Vector2f(100.0f, 100.0f));
     body.setScale(0.5,0.5);
     body.setOrigin(body.getSize() / 2.0f);
@@ -15,15 +16,23 @@ bullet::~bullet()
 void  bullet::update(float deltaTime)
 {
     velocity.x = 200.0f;
-    this->row = row;
-   // animate.updatebullet(row, deltaTime);
-    body.setTextureRect(animate.uvRect);
     body.move(velocity * deltaTime);
+    animate.updatebullet(row, deltaTime);
+    body.setTextureRect(animate.uvRect);
 }
 void bullet::draw(sf::RenderWindow& window)
 {
+
     window.draw(body);
 
+}
+
+void  bullet::update_bullet_hostile(float deltaTime)
+{
+    velocity.x = 200.0f;
+    body.move(velocity * deltaTime);
+    animate.updatebullet(row, deltaTime);
+    body.setTextureRect(animate.uvRect);
 }
 /*bullet::bullet(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed, sf::Vector2f pos) :
     animation(texture, imageCount, switchTime)

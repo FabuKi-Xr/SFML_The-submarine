@@ -150,11 +150,13 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Class.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="hostile.cpp" />
     <ClCompile Include="HP.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Menugame.cpp" />
     <ClCompile Include="obstruct.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animation.h" />
@@ -162,10 +164,12 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="Class.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="hostile.h" />
     <ClInclude Include="HP.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Menugame.h" />
     <ClInclude Include="obstruct.h" />
+    <ClInclude Include="player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,4 +1,4 @@
-#include<stdio.h>
+﻿#include<stdio.h>
 #include"game.h"
 #include<conio.h>
 #include<iostream>
@@ -9,14 +9,33 @@
 #include"Menugame.h"
 #include "HP.h"
 #include"bullet.h"
+#include <stack>
+#include "obstruct.h"
+#include "hostile.h"
 //--------------------------------------------------->>> initial <<<---------------------------------------------------------------------------------//
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	int main() {
+	int main() 
+	{
 	int oceanx = 0;
 	sf::Clock cl;
+	/////////////////////// time for bullet player  ////////////////////////
 	float bull = 0.0f;
 	sf::Clock bullet_time;
 	float deltaTime = 0.0f;
+	/////////////////////// time for obstruct  /////////////////////////////
+	sf::Clock obstruct_time;
+	float obs = 0.0f;
+	//////////////////////  time for hostile  ///////////////////////////////
+
+	sf::Clock hostile_time; //ถ้า สมุนถูกกำจัดหมดเเล้วให้ boss เข้า
+	float boss;
+	sf::Clock ;
+	float bull_boss;
+
+	//////////////////////  time for obstacle  ////////////////////////////////
+	float obstacle_time;
+	sf::Clock obstacle_cl;
+
 	//////////////////////////////////////////////////////  render window game  ///////////////////////////////////////////////////////////////////////////
 
 	sf::RenderWindow window(sf::VideoMode(1080, 720), "The marine", sf::Style::Default );
@@ -38,14 +57,14 @@
 
 	//////////////////////////////////////////////////////////  texture submarine  ////////////////////////////////////////////////////////////////////////
 	sf::RectangleShape player(sf::Vector2f(100.0f, 100.0f));
-	player.setPosition(0.0f, 500.0f);
+	player.setPosition(50.0f, 500.0f);
 	sf::Texture playerTexture;
 	if (!playerTexture.loadFromFile("img/submarine1.png")) {
 		printf("\nloading failure\n");
 	}
 	playerTexture.setSmooth(true);
 	player.setTexture(&playerTexture);
-	 
+	player.setOrigin(player.getSize() / 2.0f);
 	//////////////////////////////////////////////////////////  bullet texture  ////////////////////////////////////////////////////
 	
 	std::vector<bullet> bullet_vec;
@@ -54,14 +73,27 @@
 	{
 		printf("\ncant open bullet sprite\n");
 	}
+	//////////////////////////////////////////////////////   hostile  ////////////////////////////////////////////////////////////////////////////////////////////
+	sf::Texture hostile_texture;
+	sf::Texture boss_texture;
+	std::vector<hostile> hostile_vec;
 	
+	if (!boss_texture.loadFromFile("img/hostile.png"))
+	{
+		printf("\ncant open boss.png\n");
+	}
+	if (!hostile_texture.loadFromFile("img/hostile.png"))
+	{
+		printf("\ncant open hostile.png\n");
+	}
+	hostile host(&hostile_texture, sf::Vector2u(1, 1), .0f, sf::Vector2f(1300, 400));
 	/////////////////////////////////////////////////////  HP bar  //////////////////////////////////////////////////////////////////////////////////
 	sf::Texture blood;
 	sf::Texture heart;
 	heart.setSmooth(true);
 	blood.setSmooth(true);
-	sf::RectangleShape heartbox(sf::Vector2f(70.0f,70.0f));
-	sf::RectangleShape bloodbar(sf::Vector2f(400.0f, 30.0f));
+	sf::RectangleShape heartbox(sf::Vector2f(50.0f,50.0f));
+	sf::RectangleShape bloodbar(sf::Vector2f(400.0f, 20.0f));
 	if(!heart.loadFromFile("img/heart-icon.png"))
 	{
 		printf("\ncant open heart_icon\n");
@@ -73,9 +105,9 @@
 	bloodbar.setOutlineThickness(5.0f);
 	bloodbar.setOutlineColor(sf::Color::Black);
 	heartbox.setTexture(&heart);
-	heartbox.setPosition(.0f, 20.0f);
+	heartbox.setPosition(30.0f, 20.0f);
 
-	bloodbar.setPosition(100.0f,40.0f);
+	bloodbar.setPosition(100.0f,35.0f);
 	printf("x:%f y:%f",bloodbar.getPosition().x, bloodbar.getPosition().y);
 	bloodbar.setTexture(&blood);
 	float MyHP = 78000;
@@ -92,25 +124,25 @@
 
 	
 	///////////////////////////////////////////////////////////  obstacle  /////////////////////////////////////////////////////////////////////////////////////////////
+	std::vector<obstruct> obstruct_vec;
 	sf::Texture obstacle[3];
-	sf::RectangleShape Obstacle[3];
-	if (!obstacle[0].loadFromFile("img/obstacle.png")) {
-		printf("loading failure");
+	//sf::RectangleShape Obstacle[3];
+	if (!obstacle[0].loadFromFile("img/rock.png")) {
+		printf("cant load obstacle[0]"); //หิน
 	}
-	if (!obstacle[1].loadFromFile("img/obstacle.png")) {
-		printf("loading failure");
+	if (!obstacle[1].loadFromFile("img/pink.png")) {
+		printf("cant load obstacle[1]"); //ปะการัง
 	}
-	if (!obstacle[2].loadFromFile("img/obstacle.png")) {
-		printf("loading failure");
-	}
+	/*if (!obstacle[2].loadFromFile("img/obstacle.png")) {
+		printf("cant load obstacle[2]");
+	}*/
 	obstacle[0].setSmooth(true);
-	Obstacle[0].setTexture(&obstacle[0]);
-	
 	obstacle[1].setSmooth(true);
+	//obstacle[2].setSmooth(true);
+
+	/*Obstacle[0].setTexture(&obstacle[0]);
 	Obstacle[1].setTexture(&obstacle[1]);
-	
-	obstacle[2].setSmooth(true);
-	Obstacle[2].setTexture(&obstacle[2]);
+	Obstacle[2].setTexture(&obstacle[2]);*/
 	
 	////////////////////--------------------------------------------->>>  Game  <<<--------------------------------------------------/////////////////////////////////////////////// 
 	while (window.isOpen()) 
@@ -149,13 +181,25 @@
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
 			{
 				printf("\nMissile was released!\n");
-				bullet_vec.push_back(bullet(&bullet_texture, sf::Vector2u(2,1), .5f/*!?*/, sf::Vector2f(player.getPosition().x+50, player.getPosition().y + 80)));
+				bullet_vec.push_back(bullet(&bullet_texture, sf::Vector2u(2,1), 0.05f, sf::Vector2f(player.getPosition().x+25, player.getPosition().y + 35)));
 				bullet_time.restart();
 			}
 		}
 		
-		for (bullet& bullet : bullet_vec)
-			bullet.update(deltaTime); 
+		for (bullet& bullet : bullet_vec) 
+		{
+			bullet.update(deltaTime);
+		}
+
+		/////////////////////////////////////////////////////////  hostile  ///////////////////////////////////////////////////////////////////////////////////////////////
+		boss = hostile_time.getElapsedTime().asMilliseconds();
+		//if(boss_time == 0) // ถ้าฆ่าลูกสมุนหมดเเล้ว
+		/*{
+				
+		}*/
+			//hostile();
+			host.update(deltaTime,player.getPosition().y);
+
 		//////////////////////////////////////////////////
 		//map motion
 		/*Obstacle[0].setPosition(500.0f, 650.0f);
@@ -171,7 +215,7 @@
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
 		{
-			if(player.getPosition().x >= 0) player.move(-0.15f, 0.0f);
+			if(player.getPosition().x >= 50) player.move(-0.15f, 0.0f);
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
 		{
@@ -204,6 +248,7 @@
 		//window.draw(HP);
 		for (bullet& bullet : bullet_vec)
 			bullet.draw(window);
+		host.draw(window);
 		window.display();
 	}
 	return 0;

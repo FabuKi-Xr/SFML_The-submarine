@@ -9,6 +9,7 @@ public:
 
 	void update(int row, float deltatime);
 	void updatebullet(int row, float deltatime);
+	void updatehostile(int row, float deltatime);
 	void render();
 
 public:
