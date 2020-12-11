@@ -19,16 +19,16 @@ private:
     sf::RectangleShape body;
     unsigned int row;
     sf::Vector2f velocity;*/
-
+    
 public: 
-
+    void initHitbox();
     void update_bullet_hostile(float deltaTime);
     bullet(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, sf::Vector2f position);
     void bullet_hostile(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, sf::Vector2f position);
     ~bullet();
     void update(float deltaTime);
     void draw(sf::RenderWindow& window);
-
+    sf::FloatRect getGlobalBounds();
     /*void updateUP(float deltaTime);
     void updateDOWN(float deltaTime);
     void updateRIGHT(float deltaTime);

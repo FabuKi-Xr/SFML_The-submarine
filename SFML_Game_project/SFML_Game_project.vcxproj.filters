@@ -51,6 +51,12 @@
     <ClCompile Include="hostile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="item.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Menu.h">
@@ -84,6 +90,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="hostile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="item.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

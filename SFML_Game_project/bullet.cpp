@@ -27,9 +27,18 @@ void bullet::draw(sf::RenderWindow& window)
 
 }
 
+sf::FloatRect bullet::getGlobalBounds()
+{
+    return sf::FloatRect(body.getGlobalBounds());
+}
+
+void bullet::initHitbox()
+{
+}
+
 void  bullet::update_bullet_hostile(float deltaTime)
 {
-    velocity.x = 200.0f;
+    velocity.x = -200.0f;
     body.move(velocity * deltaTime);
     animate.updatebullet(row, deltaTime);
     body.setTextureRect(animate.uvRect);

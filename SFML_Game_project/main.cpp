@@ -12,6 +12,7 @@
 #include <stack>
 #include "obstruct.h"
 #include "hostile.h"
+#include "Collider.h"
 //--------------------------------------------------->>> initial <<<---------------------------------------------------------------------------------//
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	int main() 
@@ -29,7 +30,7 @@
 
 	sf::Clock hostile_time; //ถ้า สมุนถูกกำจัดหมดเเล้วให้ boss เข้า
 	float boss;
-	sf::Clock ;
+	sf::Clock bossBullet_time;
 	float bull_boss;
 
 	//////////////////////  time for obstacle  ////////////////////////////////
@@ -40,7 +41,8 @@
 
 	sf::RenderWindow window(sf::VideoMode(1080, 720), "The marine", sf::Style::Default );
 	
-	
+	//////////////////////////////////////////////////////////////////  Collider  ///////////////////////////////////////////////////////////////////////
+	Collider collide;
 	////////////////////////////////////////////////////////////  background  ////////////////////////////////////////////////////////////////////////////
 	sf::Texture oceanTexture;
 	if (!oceanTexture.loadFromFile("img/ocean_new.jpg")) {
@@ -64,7 +66,9 @@
 	}
 	playerTexture.setSmooth(true);
 	player.setTexture(&playerTexture);
+	player.setOutlineColor(sf::Color::Red);
 	player.setOrigin(player.getSize() / 2.0f);
+	player.setOutlineThickness(1.0f);
 	//////////////////////////////////////////////////////////  bullet texture  ////////////////////////////////////////////////////
 	
 	std::vector<bullet> bullet_vec;
@@ -76,7 +80,7 @@
 	//////////////////////////////////////////////////////   hostile  ////////////////////////////////////////////////////////////////////////////////////////////
 	sf::Texture hostile_texture;
 	sf::Texture boss_texture;
-	std::vector<hostile> hostile_vec;
+	std::vector<hostile> enemies_vec;
 	
 	if (!boss_texture.loadFromFile("img/hostile.png"))
 	{
@@ -87,6 +91,14 @@
 		printf("\ncant open hostile.png\n");
 	}
 	hostile host(&hostile_texture, sf::Vector2u(1, 1), .0f, sf::Vector2f(1300, 400));
+
+	//====================hostile bullet=====================//
+	sf::Texture hostile_bullet;
+	std::vector<bullet> boss_bullet;
+	if (!hostile_bullet.loadFromFile("img/missile_hostile1.png")) 
+	{
+		printf("cant open missile hostile pic!");
+	}
 	/////////////////////////////////////////////////////  HP bar  //////////////////////////////////////////////////////////////////////////////////
 	sf::Texture blood;
 	sf::Texture heart;
@@ -185,21 +197,25 @@
 				bullet_time.restart();
 			}
 		}
-		
+		collide.bulletAndBoss(bullet_vec, host);
 		for (bullet& bullet : bullet_vec) 
 		{
 			bullet.update(deltaTime);
 		}
-
+		
 		/////////////////////////////////////////////////////////  hostile  ///////////////////////////////////////////////////////////////////////////////////////////////
-		boss = hostile_time.getElapsedTime().asMilliseconds();
+		//bull_boss = bossBullet_time.getElapsedTime().asMilliseconds();
 		//if(boss_time == 0) // ถ้าฆ่าลูกสมุนหมดเเล้ว
 		/*{
 				
 		}*/
 			//hostile();
+		
+			host.canMissileShoot(deltaTime,900.0f, &hostile_bullet);
+			printf("\nenemie\'s Missile was released!\n");
+			//host.ReceivePlayerRect(player);
 			host.update(deltaTime,player.getPosition().y);
-
+			
 		//////////////////////////////////////////////////
 		//map motion
 		/*Obstacle[0].setPosition(500.0f, 650.0f);
@@ -215,24 +231,26 @@
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
 		{
-			if(player.getPosition().x >= 50) player.move(-0.15f, 0.0f);
+			if(player.getPosition().x >= 50) player.move(-0.2f, 0.0f);
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
 		{
-			player.move(0.15f, 0.0f);
+			player.move(0.2f, 0.0f);
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
 		{
-			player.move(0.0f, -0.15f);
+			player.move(0.0f, -0.2f);
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
 		{
-			player.move(0.0f, 0.15f);
+			player.move(0.0f, 0.2f);
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
 		{
 			window.close();
 		}
+		
+		//----------------------------
 		
 		window.clear();
 		//menu.draw(window);
@@ -246,8 +264,10 @@
 		window.draw(heartbox);
 		window.draw(bloodbar);
 		//window.draw(HP);
+		
 		for (bullet& bullet : bullet_vec)
 			bullet.draw(window);
+		
 		host.draw(window);
 		window.display();
 	}
