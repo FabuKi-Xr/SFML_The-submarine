@@ -1,9 +1,9 @@
 #pragma once
 #include<SFML/Graphics.hpp>
+#include "animation.h"
 
-#define OBJECT_SCALE 600.0
-#define BUTTON_SCALE 350.0
-#define BUTTON_POSITION_X 675.0
+#define BUTTON_SCALEX 300.0
+#define BUTTON_SCALEY 100.0
 #define MAIN_MENU_BACKGROUND_FILEPATH "img/MENU_BG.jpg"
 #define MAIN_MENU_PLAY_BUTTON_DEFAULT "img/play_default.png"
 #define MAIN_MENU_PLAY_BUTTON_ONCLICK "img/play_onclick.png"
@@ -26,20 +26,32 @@ public:
 	~Menugame();
 	
 	//button
-	void update(const sf::Vector2i mousePosWindow);
-	void render(sf::RenderTarget& target);
+
+	void update(float deltaTime,bool mouseState, sf::CircleShape& MousePosition);
+
+	//void render(sf::RenderTarget& target);
 
 	//draw object in menu display!!
 	void draw(sf::RenderWindow &window);
-
+	//sf::FloatRect getGlobalBounds();
+	
 
 private:
 
-	short unsigned buttonState;
+	sf::Vector2f velocity;
+	//short unsigned buttonState;
 	sf::Texture MENU_BG,OBJECT;
-	sf::Texture BUTTON[3][3];
-	sf::Sprite BG;
-	sf::RectangleShape shape;
-	
+	sf::Texture ButtonTexture[3][3];
+	sf::Texture marine;
+	sf::Sprite BG;//background
+	sf::RectangleShape playButtonBody;
+	sf::RectangleShape optionButtonBody;
+	sf::RectangleShape exitButtonBody;
+	sf::RectangleShape submarine;
+	sf::Texture bubble;
+
+	unsigned short playButtonState = Default; // start = 0
+	unsigned short optionButtonState = Default;
+	unsigned short exitButtonState = Default;
 };
 

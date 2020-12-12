@@ -53,6 +53,7 @@ void hostile::canMissileShoot(float deltaTime, float missileCooldown, sf::Textur
 
     this->missileCooldown;
     this->missileCooldown = bull_boss.getElapsedTime().asMilliseconds();
+
     if (body.getPosition().x <= 930)
     {
         if (this->missileCooldown >= missileCooldown)
@@ -66,16 +67,11 @@ void hostile::canMissileShoot(float deltaTime, float missileCooldown, sf::Textur
 
 }
 
-//void hostile::ReceivePlayerRect(sf::RectangleShape& playerRect)
-//{
-//    playerAttacked.bulletBossAndPlayer(missile,playerRect);
-//}
-
 hostile::~hostile()
 {
 
 }
-void  hostile::update(float deltaTime,float posPlayer)
+void  hostile::update(float deltaTime,float posPlayer, sf::RectangleShape& player)
 {
     this->velocity ;
 
@@ -86,7 +82,8 @@ void  hostile::update(float deltaTime,float posPlayer)
         body.move(-velocity * deltaTime);
     }
 
-    std::cout << "\nhostile position(x) : " << body.getPosition().x << std::endl;
+    //std::cout << "\nhostile position(x) : " << body.getPosition().x << std::endl;
+
     //ด่าน 1 40 ด่าน 2 75 ด่าน 3 100
     if (direction == 0) 
     {
@@ -116,9 +113,17 @@ void  hostile::update(float deltaTime,float posPlayer)
    
     for (bullet& bullet : missile)
     {
-        bullet.update_bullet_hostile(deltaTime);
-        //bullet_time.restart();
+        int i = 0;
+        if (missile[i].bulletGetPosition().x <= 5 )
+        {
+            missile.erase(missile.begin() + i);
+        }
+        else bullet.update_bullet_hostile(deltaTime);
+        //std::cout << "missile size: " << missile.size() << std::endl;
+        i++;
+        
     }
+    std::cout << "missile size: " << missile.size()<<std::endl;
 }
 void hostile::draw(sf::RenderWindow& window)
 {
@@ -136,5 +141,3 @@ sf::FloatRect hostile::getGlobalBounds()
 {
     return sf::FloatRect(body.getGlobalBounds());
 }
-
-

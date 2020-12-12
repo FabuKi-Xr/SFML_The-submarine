@@ -154,7 +154,6 @@
     <ClCompile Include="hostile.cpp" />
     <ClCompile Include="HP.cpp" />
     <ClCompile Include="item.cpp" />
-    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Menugame.cpp" />
     <ClCompile Include="obstruct.cpp" />
     <ClCompile Include="main.cpp" />
@@ -170,7 +169,6 @@
     <ClInclude Include="hostile.h" />
     <ClInclude Include="HP.h" />
     <ClInclude Include="item.h" />
-    <ClInclude Include="Menu.h" />
     <ClInclude Include="Menugame.h" />
     <ClInclude Include="obstruct.h" />
     <ClInclude Include="player.h" />

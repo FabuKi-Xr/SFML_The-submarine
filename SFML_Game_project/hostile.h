@@ -10,7 +10,7 @@ public:
 
 	hostile(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, sf::Vector2f position);
 	~hostile();
-	void update(float deltaTime,float posPlayer);
+	void update(float deltaTime,float posPlayer,sf::RectangleShape &player);
 	void draw(sf::RenderWindow& window);
 	sf::FloatRect getGlobalBounds();
 	sf::RectangleShape body;
@@ -21,9 +21,7 @@ public:
 	sf::RectangleShape missileBody;
 	void initHitbox();
 	void canMissileShoot(float deltaTime,float missileCooldown, sf::Texture *missile_texture);
-
-	//void missilePosition(std::vector<bullet>& missile);
-	//void ReceivePlayerRect(sf::RectangleShape& playerRect);
+	std::vector<bullet> missile;
 
 private:
 	sf::Texture texture;
@@ -32,10 +30,9 @@ private:
 	unsigned int row;
 	sf::Vector2f velocity;
 	bool direction;
-	std::vector<bullet> missile;
+	
 
 	float missileCooldown;
 	sf::Clock bull_boss;
-	//Collider playerAttacked;
 };
 

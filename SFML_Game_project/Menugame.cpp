@@ -6,90 +6,171 @@ Menugame::Menugame(float width, float height)
 	if (!MENU_BG.loadFromFile(MAIN_MENU_BACKGROUND_FILEPATH)) {
 		printf("loading failure BG");
 	}
-	if (!BUTTON[0][0].loadFromFile(MAIN_MENU_PLAY_BUTTON_DEFAULT)) {
+	if (!ButtonTexture[0][0].loadFromFile(MAIN_MENU_PLAY_BUTTON_DEFAULT)) {
 		printf("cant open play_default");
 	}
-	if (!BUTTON[0][1].loadFromFile(MAIN_MENU_PLAY_BUTTON_ONCLICK)) {
+	if (!ButtonTexture[0][1].loadFromFile(MAIN_MENU_PLAY_BUTTON_ONCLICK)) {
 		printf("cant open play_onclick");
 	}
-	if (!BUTTON[0][2].loadFromFile(MAIN_MENU_PLAY_BUTTON_CLICKED)) {
+	if (!ButtonTexture[0][2].loadFromFile(MAIN_MENU_PLAY_BUTTON_CLICKED)) {
 		printf("cant open play_clicked");
 	}
-	if (!BUTTON[1][0].loadFromFile(MAIN_MENU_OPTION_BUTTON_DEFAULT)) {
+	if (!ButtonTexture[1][0].loadFromFile(MAIN_MENU_OPTION_BUTTON_DEFAULT)) {
 		printf("cant open option_default");
 	}
-	if (!BUTTON[1][1].loadFromFile(MAIN_MENU_OPTION_BUTTON_ONCLICK)) {
+	if (!ButtonTexture[1][1].loadFromFile(MAIN_MENU_OPTION_BUTTON_ONCLICK)) {
 		printf("cant open MAIN_MENU_OPTION_BUTTON_ONCLICK");
 	}
-	if (!BUTTON[1][2].loadFromFile(MAIN_MENU_OPTION_BUTTON_CLICKED)) {
+	if (!ButtonTexture[1][2].loadFromFile(MAIN_MENU_OPTION_BUTTON_CLICKED)) {
 		printf("cant open MAIN_MENU_OPTION_BUTTON_CLICKED");
 	}
-	if (!BUTTON[2][0].loadFromFile(MAIN_MENU_EXIT_BUTTON_DEFAULT)) {
+	if (!ButtonTexture[2][0].loadFromFile(MAIN_MENU_EXIT_BUTTON_DEFAULT)) {
 		printf("cant open MAIN_MENU_EXIT_BUTTON_DEFAULT");
 	}
-	if (!BUTTON[2][1].loadFromFile(MAIN_MENU_EXIT_BUTTON_ONCLICK)) {
+	if (!ButtonTexture[2][1].loadFromFile(MAIN_MENU_EXIT_BUTTON_ONCLICK)) {
 		printf("cant open MAIN_MENU_EXIT_BUTTON_ONCLICK");
 	}
-	if (!BUTTON[2][2].loadFromFile(MAIN_MENU_EXIT_BUTTON_CLICKED)) {
+	if (!ButtonTexture[2][2].loadFromFile(MAIN_MENU_EXIT_BUTTON_CLICKED)) {
 		printf("cant open MAIN_MENU_EXIT_BUTTON_CLICKED");
 	}
-	BG.setTexture(MENU_BG);
-	
-	//submarine sprite
-	if (!OBJECT.loadFromFile("img/submarine.png")) {
-		printf("loading failure object \"marine\"");
+	if (!marine.loadFromFile("img/player.png"))
+	{
+		printf("cant open player.png");
 	}
+	if (!bubble.loadFromFile("img/bubble.png"))
+	{
+		printf("cant open bubble.png");
+	}
+	BG.setTexture(MENU_BG);
+
 	MENU_BG.setSmooth(true);
 	OBJECT.setSmooth(true);
-	BUTTON[0][0].setSmooth(true);
-	BUTTON[0][1].setSmooth(true);
-	BUTTON[0][2].setSmooth(true);
-	BUTTON[1][0].setSmooth(true);
-	BUTTON[2][0].setSmooth(true);
+	ButtonTexture[0][0].setSmooth(true);
+	ButtonTexture[0][1].setSmooth(true);
+	ButtonTexture[0][2].setSmooth(true);
+	ButtonTexture[1][0].setSmooth(true);
+	ButtonTexture[1][1].setSmooth(true);
+	ButtonTexture[1][2].setSmooth(true);
+	ButtonTexture[2][0].setSmooth(true);
+	ButtonTexture[2][1].setSmooth(true);
+	ButtonTexture[2][2].setSmooth(true);
+	marine.setSmooth(true);
+
+	//init object//
+	submarine.setTexture(&marine);
+	submarine.setPosition(-300.0f, 75.0f);
+	submarine.setSize(sf::Vector2f(600.0f, 600.0f));
+
+	// initbutton //
+	playButtonBody.setTexture(&ButtonTexture[0][0]);
+	playButtonBody.setSize(sf::Vector2f(BUTTON_SCALEX, BUTTON_SCALEY));
+	playButtonBody.setOutlineColor(sf::Color::Transparent);
+	playButtonBody.setOutlineThickness(1.0f);
+	playButtonBody.setPosition(700.0f, 280.0f);
+
+	optionButtonBody.setTexture(&ButtonTexture[1][0]);
+	optionButtonBody.setSize(sf::Vector2f(BUTTON_SCALEX, BUTTON_SCALEY));
+	optionButtonBody.setPosition(700.0f, 420.0f);
+
+	exitButtonBody.setTexture(&ButtonTexture[2][0]);
+	exitButtonBody.setSize(sf::Vector2f(BUTTON_SCALEX, BUTTON_SCALEY));
+	exitButtonBody.setPosition(700.0f, 540.0f);
 
 }
 Menugame::~Menugame()
 {
+
+}
+void Menugame::update(float deltaTime, bool mouseState, sf::CircleShape& MousePosition)
+{
+	this->velocity;
+	velocity.x = 200.0f;
+	if (submarine.getPosition().x <= 0)
+	{
+		submarine.move(deltaTime * 200.0f, 0.0f);
+
+	}
+
+	playButtonBody.setTexture(&ButtonTexture[0][0]);
+	playButtonState = Default;
+
+	optionButtonBody.setTexture(&ButtonTexture[1][0]);
+	optionButtonState = Default;
+
+	exitButtonBody.setTexture(&ButtonTexture[2][0]);
+	exitButtonState = Default;
+
+	if (playButtonBody.getGlobalBounds().intersects(MousePosition.getGlobalBounds()))
+	{
+
+		if (playButtonState == Default)
+		{
+			playButtonBody.setTexture(&ButtonTexture[0][1]);
+			playButtonBody.setSize(sf::Vector2f(BUTTON_SCALEX, BUTTON_SCALEY));
+			playButtonBody.setPosition(700.0f, 280.0f);
+			playButtonState = onclick;
+		}
+		if ((playButtonState == onclick) && mouseState == true)
+		{
+			playButtonBody.setTexture(&ButtonTexture[0][2]);
+			playButtonBody.setSize(sf::Vector2f(BUTTON_SCALEX, BUTTON_SCALEY));
+			playButtonBody.setPosition(700.0f, 280.0f);
+			mouseState == false;
+		}
+
+	}
+
+	if (optionButtonBody.getGlobalBounds().intersects(MousePosition.getGlobalBounds()))
+	{
+
+		if (optionButtonState == Default)
+		{
+			optionButtonBody.setTexture(&ButtonTexture[1][1]);
+			optionButtonBody.setSize(sf::Vector2f(BUTTON_SCALEX, BUTTON_SCALEY));
+			optionButtonBody.setPosition(700.0f, 420.0f);
+			optionButtonState = onclick;
+		}
+		if ((optionButtonState == onclick) && mouseState == true)
+		{
+			optionButtonBody.setTexture(&ButtonTexture[1][2]);
+			optionButtonBody.setSize(sf::Vector2f(BUTTON_SCALEX, BUTTON_SCALEY));
+			optionButtonBody.setPosition(700.0f, 420.0f);
+			mouseState == false;
+		}
+
+	}
+
+	if (exitButtonBody.getGlobalBounds().intersects(MousePosition.getGlobalBounds()))
+	{
+
+		if (exitButtonState == Default)
+		{
+			exitButtonBody.setTexture(&ButtonTexture[2][1]);
+			exitButtonBody.setSize(sf::Vector2f(BUTTON_SCALEX, BUTTON_SCALEY));
+			exitButtonBody.setPosition(700.0f, 560.0f);
+			exitButtonState = onclick;
+		}
+		if ((exitButtonState == onclick) && mouseState == true)
+		{
+			exitButtonBody.setTexture(&ButtonTexture[2][2]);
+			exitButtonBody.setSize(sf::Vector2f(BUTTON_SCALEX, BUTTON_SCALEY));
+			exitButtonBody.setPosition(700.0f, 560.0f);
+			mouseState == false;
+		}
+
+	}
 }
 void Menugame::draw(sf::RenderWindow& window)
 {
-	//sf::RenderWindow window(sf::VideoMode(1080, 720), "The marine", sf::Style::Default);
-	//PART SET RECTANGLESHAPE OBJECT 
-	sf::RectangleShape PLACE_OBJECT(sf::Vector2f(OBJECT_SCALE, OBJECT_SCALE));
-	sf::RectangleShape shape(sf::Vector2f(BUTTON_SCALE, BUTTON_SCALE));
-	/*sf::RectangleShape PLACE_PLAY_BUTTON2(sf::Vector2f(BUTTON_SCALE, BUTTON_SCALE));
-	sf::RectangleShape PLACE_PLAY_BUTTON3(sf::Vector2f(BUTTON_SCALE, BUTTON_SCALE));*/
+	window.draw(BG);
+	window.draw(submarine);
+	window.draw(playButtonBody);
+	window.draw(optionButtonBody);
+	window.draw(exitButtonBody);
 
-	sf::RectangleShape PLACE_OPTION_BUTTON1(sf::Vector2f(BUTTON_SCALE, BUTTON_SCALE));
-	/*sf::RectangleShape PLACE_OPTION_BUTTON2(sf::Vector2f(BUTTON_SCALE, BUTTON_SCALE));
-	sf::RectangleShape PLACE_OPTION_BUTTON3(sf::Vector2f(BUTTON_SCALE, BUTTON_SCALE));*/
-
-	sf::RectangleShape PLACE_EXIT_BUTTON1(sf::Vector2f(BUTTON_SCALE, BUTTON_SCALE));
-	PLACE_OBJECT.setTexture(&OBJECT);
-	PLACE_OBJECT.setPosition(.0f, 75.0f);//!!
-
-	//button
-	shape.setTexture(&BUTTON[0][1]);
-	shape.setPosition(BUTTON_POSITION_X,150.0f);
-	/*PLACE_PLAY_BUTTON2.setTexture(&BUTTON[0][2]);
-	PLACE_PLAY_BUTTON2.setPosition(BUTTON_POSITION_X, 150.0f);*/
-	PLACE_OPTION_BUTTON1.setTexture(&BUTTON[1][0]);
-	PLACE_OPTION_BUTTON1.setPosition(BUTTON_POSITION_X,300.0f);
-	PLACE_EXIT_BUTTON1.setTexture(&BUTTON[2][0]);
-	PLACE_EXIT_BUTTON1.setPosition(BUTTON_POSITION_X, 450.0f);
-	
-	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-	
-	//ปัญหาตอนนี้คือไม่ผ่านupdate กับ render
-	//PART BUTTON OBJECT 
-		//window.clear();
-		//window.display();
-	
-		window.draw(BG);
-		window.draw(PLACE_OBJECT);
-		window.draw(shape);
-		window.draw(PLACE_OPTION_BUTTON1);
-		window.draw(PLACE_EXIT_BUTTON1);
-		
 }
+
+
+
+
 

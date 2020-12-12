@@ -1,14 +1,24 @@
 #pragma once
+#include<iostream>
 #include<sfml\Graphics.hpp>
 class HP
 {
 private:
-	sf::Texture bar_frame;
-	
+	sf::Texture HPframeTexture;
+	sf::Texture HPcolorTexture;
+	sf::Texture heart;
+	sf::RectangleShape heartBody;
+	sf::RectangleShape HPbarFrame;
+	sf::RectangleShape HPbarColor;
+	float deltaTime;
+
 public:
-	HP(sf::Texture *pic,float width,float height,float x,float y );
-	void HP_getLow(float damage);
-	void update();
-	void render();
+	HP();
+
+	//HP(sf::Texture *HPbar,float width,float height,float x,float y );
+
+	void update(float deltaTime,float damage);
+
+	void draw(sf::RenderWindow& window);
 };
 

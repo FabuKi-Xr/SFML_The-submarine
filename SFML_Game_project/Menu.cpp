@@ -1,50 +1,37 @@
 #include "Menu.h"
 
-
-Menu::Menu(float width,float height)
+Menu::Menu(float width, float height)
 {
-	
-	
-	if (!font.loadFromFile("showg.ttf")) 
-	{
-		//handle error
+	if (!MenuBG.loadFromFile(MAIN_MENU_BACKGROUND_FILEPATH)) {
+		printf("loading failure BG");
 	}
-	//play
-	menu[0].setFont(font);
-	menu[0].setFillColor(sf::Color::Red);
-	menu[0].setString("Play");
-	menu[0].setPosition(sf::Vector2f(width / 2, height / (MAX_NUMBER_OF_ITEMS + 1) * 1));
-
-	menu[1].setFont(font);
-	menu[1].setFillColor(sf::Color::White);
-	menu[1].setString("Options");
-	menu[1].setPosition(sf::Vector2f(width / 2, height / (MAX_NUMBER_OF_ITEMS + 1) * 2));
-
-	menu[2].setFont(font);
-	menu[2].setFillColor(sf::Color::White);
-	menu[2].setString("Exit");
-	menu[2].setPosition(sf::Vector2f(width / 2, height / (MAX_NUMBER_OF_ITEMS + 1) * 3));
-
-	selectedItemIndex = 0;
-}
-Menu::~Menu()
-{
-
-}
-void Menu::draw(sf::RenderWindow& window) 
-{
-	for (int i = 0;i < MAX_NUMBER_OF_ITEMS;i++) 
-	{
-		window.draw(menu[i]);
+	if (!ButtonTexture[0][0].loadFromFile(MAIN_MENU_PLAY_BUTTON_DEFAULT)) {
+		printf("cant open play_default");
 	}
-}
-
-void Menu::MoveUp()
-{
-	if (selectedItemIndex + 1 < MAX_NUMBER_OF_ITEMS)
-	{
-		menu[selectedItemIndex].setFillColor(sf::Color::White);
-		selectedItemIndex--;
-		menu[selectedItemIndex].setFillColor(sf::Color::Red);
+	if (!ButtonTexture[0][1].loadFromFile(MAIN_MENU_PLAY_BUTTON_ONCLICK)) {
+		printf("cant open play_onclick");
 	}
+	if (!ButtonTexture[0][2].loadFromFile(MAIN_MENU_PLAY_BUTTON_CLICKED)) {
+		printf("cant open play_clicked");
+	}
+	if (!ButtonTexture[1][0].loadFromFile(MAIN_MENU_OPTION_BUTTON_DEFAULT)) {
+		printf("cant open option_default");
+	}
+	if (!ButtonTexture[1][1].loadFromFile(MAIN_MENU_OPTION_BUTTON_ONCLICK)) {
+		printf("cant open MAIN_MENU_OPTION_BUTTON_ONCLICK");
+	}
+	if (!ButtonTexture[1][2].loadFromFile(MAIN_MENU_OPTION_BUTTON_CLICKED)) {
+		printf("cant open MAIN_MENU_OPTION_BUTTON_CLICKED");
+	}
+	if (!ButtonTexture[2][0].loadFromFile(MAIN_MENU_EXIT_BUTTON_DEFAULT)) {
+		printf("cant open MAIN_MENU_EXIT_BUTTON_DEFAULT");
+	}
+	if (!ButtonTexture[2][1].loadFromFile(MAIN_MENU_EXIT_BUTTON_ONCLICK)) {
+		printf("cant open MAIN_MENU_EXIT_BUTTON_ONCLICK");
+	}
+	if (!ButtonTexture[2][2].loadFromFile(MAIN_MENU_EXIT_BUTTON_CLICKED)) {
+		printf("cant open MAIN_MENU_EXIT_BUTTON_CLICKED");
+	}
+	BG.setTexture(&MenuBG);
+
 }

@@ -29,6 +29,8 @@ public:
     void update(float deltaTime);
     void draw(sf::RenderWindow& window);
     sf::FloatRect getGlobalBounds();
+
+    sf::Vector2f bulletGetPosition();
     /*void updateUP(float deltaTime);
     void updateDOWN(float deltaTime);
     void updateRIGHT(float deltaTime);

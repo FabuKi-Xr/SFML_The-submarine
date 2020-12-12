@@ -40,18 +40,20 @@ void Collider::bulletAndBoss(std::vector<bullet>& bull, hostile &host)
             }
     }
 }
-//void Collider::bulletBossAndPlayer(std::vector<bullet>& missile, sf::RectangleShape &playerRect)
-//{
-//    for (int i = 0;i < missile.size();i++)
-//    {
-//        if (missile[i].getGlobalBounds().intersects(playerRect.getGlobalBounds()))
-//        {
-//            std::cout << "crash into player!" << std::endl;
-//            missile.erase(missile.begin() + i);
-//            break;
-//        }
-//    }
-//}
+void Collider::bulletBossAndPlayer(hostile &host, sf::RectangleShape& player)
+{
+    for (int i = 0;i < host.missile.size();i++)
+    {
+        //int i = 0;
+        if (host.missile[i].getGlobalBounds().intersects(player.getGlobalBounds()))
+        {
+            std::cout << "crash into player!" << std::endl;
+            host.missile.erase(host.missile.begin() + i);
+            break;
+        }
+       // i++;
+    }
+}
 
 
 
