@@ -54,6 +54,9 @@
     <ClCompile Include="Menugame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="drawobstacle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class.h">
@@ -90,6 +93,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Menugame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="drawobstacle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

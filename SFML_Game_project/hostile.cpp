@@ -101,6 +101,7 @@ void  hostile::update(float deltaTime,float posPlayer, sf::RectangleShape& playe
             direction = 0;
         }
     }
+
     body.setTextureRect(animate.uvRect);
     //------ Hitbox ------//
     hitbox1.setPosition(sf::Vector2f(body.getPosition().x - 30.0f, body.getPosition().y + 40));

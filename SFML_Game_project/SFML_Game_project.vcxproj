@@ -150,6 +150,7 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Class.cpp" />
     <ClCompile Include="Collider.cpp" />
+    <ClCompile Include="drawobstacle.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="hostile.cpp" />
     <ClCompile Include="HP.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="Class.h" />
     <ClInclude Include="Collider.h" />
+    <ClInclude Include="drawobstacle.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="hostile.h" />
     <ClInclude Include="HP.h" />

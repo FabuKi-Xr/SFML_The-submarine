@@ -8,10 +8,9 @@ public:
 	Collider();
 	~Collider();
 	
-	void bulletAndBoss(std::vector<bullet> &bull,hostile &host);
+	void bulletAndBoss(std::vector<bullet> &bull,hostile &host,int &score);
 
 	void bulletBossAndPlayer(hostile& host, sf::RectangleShape& playerPosition);
-
 private:
 	
 };

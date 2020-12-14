@@ -10,22 +10,28 @@
 #include "HP.h"
 #include "bullet.h"
 #include <stack>
-#include "obstruct.h"
 #include "hostile.h"
 #include "Collider.h"
+#include "obstruct.h"
 //--------------------------------------------------->>> initial <<<---------------------------------------------------------------------------------//
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	int main() 
 	{
+	srand(time(NULL));
 	int oceanx = 0;
 	sf::Clock cl;
+
 	/////////////////////// time for bullet player  ////////////////////////
+
 	float bull = 0.0f;
 	sf::Clock bullet_time;
 	float deltaTime = 0.0f;
+
 	/////////////////////// time for obstruct  /////////////////////////////
+
 	sf::Clock obstruct_time;
 	float obs = 0.0f;
+
 	//////////////////////  time for hostile  ///////////////////////////////
 
 	sf::Clock hostile_time; //ถ้า สมุนถูกกำจัดหมดเเล้วให้ boss เข้า
@@ -47,7 +53,7 @@
 	mousePosition.setRadius(10.0f);
 	mousePosition.setOrigin(5.0f,5.0f);
 	
-
+	int score = 0;
 	//////////////////////////////////////////////////////  render window game  ///////////////////////////////////////////////////////////////////////////
 
 	sf::RenderWindow window(sf::VideoMode(1080, 720), "The marine", sf::Style::Default );
@@ -74,7 +80,7 @@
 	ocean2.setTexture(oceanTexture);
 	ocean2.setTextureRect(sf::IntRect(0, 0, 3000, 720));
 	ocean2.setPosition(2999.0f, 0.0f);
-
+	float mapSpeedx = 0.1f;
 	//////////////////////////////////////////////////////////  texture submarine  ////////////////////////////////////////////////////////////////////////
 	sf::RectangleShape player(sf::Vector2f(100.0f, 100.0f));
 	player.setPosition(50.0f, 500.0f);
@@ -165,27 +171,21 @@
 	}*/
 
 	
-	///////////////////////////////////////////////////////////  obstacle  /////////////////////////////////////////////////////////////////////////////////////////////
-	std::vector<obstruct> obstruct_vec;
-	sf::Texture obstacle[3];
-	//sf::RectangleShape Obstacle[3];
-	if (!obstacle[0].loadFromFile("img/rock.png")) {
-		printf("cant load obstacle[0]"); //หิน
+	/////////////////////////////////////////////////////////////   obstruct   /////////////////////////////////////////////////////////////////////////////////////////////
+	sf::Texture coral1;
+	sf::Texture coral2;
+	int coralState;
+	if (!coral1.loadFromFile("img/coral1.png"))
+	{
+		std::cout << "cant open coral1.png" << std::endl;
 	}
-	if (!obstacle[1].loadFromFile("img/pink.png")) {
-		printf("cant load obstacle[1]"); //ปะการัง
+	if (!coral2.loadFromFile("img/coral2.png"))
+	{
+		std::cout << "cant open coral2.png" << std::endl;
 	}
-	/*if (!obstacle[2].loadFromFile("img/obstacle.png")) {
-		printf("cant load obstacle[2]");
-	}*/
-	obstacle[0].setSmooth(true);
-	obstacle[1].setSmooth(true);
-	//obstacle[2].setSmooth(true);
+	coral1.setSmooth(true);
+	coral2.setSmooth(true);
 
-	/*Obstacle[0].setTexture(&obstacle[0]);
-	Obstacle[1].setTexture(&obstacle[1]);
-	Obstacle[2].setTexture(&obstacle[2]);*/
-	
 	////////////////////--------------------------------------------->>>  Game  <<<--------------------------------------------------/////////////////////////////////////////////// 
 	while (window.isOpen()) 
 	{
@@ -220,10 +220,10 @@
 
 		//-----^^^^------ menu -----^^^^------//
 		
-		if (gameState == menustate)
+		/*if (gameState == menustate)
 		{
 			menu.update(deltaTime, sf::Mouse::isButtonPressed(sf::Mouse::Left), mousePosition);
-		}
+		}*/
 
 		////////////////////////////////////////// create bullet ////////////////////////////////////////////////////////////////////////////////
 		bull = bullet_time.getElapsedTime().asMilliseconds();
@@ -236,7 +236,7 @@
 				bullet_time.restart();
 			}
 		}
-		collide.bulletAndBoss(bullet_vec, host);
+		collide.bulletAndBoss(bullet_vec, host,score);
 		for (bullet& bullet : bullet_vec) 
 		{
 			int i = 0;
@@ -258,11 +258,11 @@
 		collide.bulletBossAndPlayer(host, playerHitbox);
 		host.update(deltaTime,player.getPosition().y,player);
 		
-		//////////////////////////////////////////////////
-		//map motion
-		/*Obstacle[0].setPosition(500.0f, 650.0f);
-		Obstacle[1].setPosition(700.0f, 650.0f);
-		Obstacle[2].setPosition(750.0f, 650.0f);*/
+		/////////////////////////////////  obstruct  ////////////////////////////////
+		obstruct coral(&coral1, &coral2, deltaTime);
+		coral.update(deltaTime,mapSpeedx);
+
+		////////////////////////////////////////////////////  map motion  /////////////////////////////
 		ocean1.move(-0.1f, 0.0f);
 		ocean2.move(-0.1f, 0.0f);
 		oceanx++;
@@ -296,18 +296,18 @@
 		mousePosition.setPosition(sf::Vector2f(sf::Mouse::getPosition(window)));
 		window.clear();
 		
-		if (gameState == 0)
+		/*if (gameState == 0)
 		{
 			menu.draw(window);
 			window.draw(mousePosition);
-		}
+		}*/
 
 		/*window.draw(Obstacle[0]);
 		window.draw(Obstacle[1]);
 		window.draw(Obstacle[2]);*/
 		
 		//---game render---//
-			/*window.draw(ocean1);
+			window.draw(ocean1);
 			window.draw(ocean2);
 			window.draw(player);
 			window.draw(playerHitbox);
@@ -316,8 +316,8 @@
 		for (bullet& bullet : bullet_vec)
 			bullet.draw(window);
 		
-		host.draw(window);*/
-
+		host.draw(window);
+		coral.draw(window);
 		//window.draw(HP);
 		window.display();
 	}

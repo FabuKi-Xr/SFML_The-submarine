@@ -21,7 +21,6 @@ private:
     sf::Vector2f velocity;*/
     
 public: 
-    void initHitbox();
     void update_bullet_hostile(float deltaTime);
     bullet(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, sf::Vector2f position);
     void bullet_hostile(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, sf::Vector2f position);

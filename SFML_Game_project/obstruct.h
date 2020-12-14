@@ -3,23 +3,44 @@
 #include<iostream>
 #include<time.h>
 #include<SFML\Graphics.hpp>
-#include "animation.h"
+#include <vector>
+#include "drawobstacle.h"
 class obstruct
 {
 public:
-
-	void object_rand(sf::Texture obstruct);
-	void update(float deltaTime); // ตำเเหน่ง??
-	obstruct(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, sf::Vector2f pos);
-	void draw(sf::RenderWindow& window);
-
-private: 
-		sf::RectangleShape body;
-		int randX = 0, randY = 0;
-		sf::Texture obstacle;
-		int state = 0; //สุ่มรูปเเบบอุปสรรค
-		sf::Vector2f velocity;
-		int row;
-		animation animate;
+	obstruct(sf::Texture* texture1, sf::Texture* texture2, float deltaTime);
+	void create(sf::Vector2f previousCoral);
+	void update(float deltaTime, float mapSpeed); // ตำเเหน่ง??
+	void draw(sf::RenderWindow &window);
+private:
+	sf::RectangleShape body;
+	int state;
+	std::vector<drawobstacle> coral;
 };
-
+//
+//	void coralUpdate(float deltaTime , float mapVelocity);
+//
+//	obstruct(int obstructState, sf::Vector2f pos);
+//	void draw(sf::RenderWindow& window);
+//	void createObstrcut(std::vector<obstruct> drawObstrcut);
+//	sf::Vector2f obstructPosition();
+//
+//private: 
+//	int obstructState;
+//	unsigned short int coralRect;
+//	unsigned short int coralState;
+//		sf::Texture coralTexture1;
+//		sf::Texture coralTexture2;
+//		sf::RectangleShape body;
+//		sf::RectangleShape coralBody1;
+//		sf::RectangleShape coralBody2;
+//		int randX = 0, randY = 0;
+//		sf::Texture obstacle;
+//		int state = 0; //สุ่มรูปเเบบอุปสรรค
+//		sf::Vector2f velocity;
+//		int row;
+//		float mapVelocity;
+//		//animation animate;
+//		std::vector<obstruct> drawObstruct;
+//};
+//

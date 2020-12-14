@@ -38,11 +38,6 @@ sf::Vector2f bullet::bulletGetPosition()
     return sf::Vector2f(body.getPosition());
 }
 
-
-void bullet::initHitbox()
-{
-}
-
 void  bullet::update_bullet_hostile(float deltaTime)
 {
     velocity.x = -200.0f;
