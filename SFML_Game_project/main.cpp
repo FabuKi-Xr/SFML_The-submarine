@@ -42,7 +42,7 @@
 	//////////////////////  time for obstacle  ////////////////////////////////
 	float obstacle_time;
 	sf::Clock obstacle_cl;
-	Menugame menu(1080.0f,720.0f);
+	
 
 	/// mouse location ///
 
@@ -60,9 +60,11 @@
 
 	mousePosition.setPosition(sf::Vector2f(sf::Mouse::getPosition(window)));
 
-	enum valueState { menustate=0 ,selectStage };
+	enum valueState { menustate=0 ,playbutton ,exitButton,selectStage ,endGame };
 
-	int gameState = 0;
+	int gameState = menustate;
+	bool isGameOn = false;
+	Menugame menu(1080.0f, 720.0f, gameState);
 	//////////////////////////////////////////////////////////////////  Collider  ///////////////////////////////////////////////////////////////////////
 	
 	Collider collide;
@@ -81,6 +83,21 @@
 	ocean2.setTextureRect(sf::IntRect(0, 0, 3000, 720));
 	ocean2.setPosition(2999.0f, 0.0f);
 	float mapSpeedx = 0.1f;
+
+	//////  pause //////
+	/*sf::Texture pauseButtonTexture;
+	if (!pauseButtonTexture.loadFromFile("img/pause.png"))
+	{
+		std::cout << "cant open pause.png" << std::endl;
+	}
+	pauseButtonTexture.setSmooth(true);
+	sf::RectangleShape pauseButton;
+	pauseButton.setTexture(&pauseButtonTexture);
+	pauseButton.setSize(sf::Vector2f(100.0f, 100.0f));
+	pauseButton.setPosition(sf::Vector2f(980.0f, 20.0f));*/
+	//pauseButton.setOrigin(pauseButton.getPosition().x / 2, pauseButton.getPosition().y / 2);
+
+
 	//////////////////////////////////////////////////////////  texture submarine  ////////////////////////////////////////////////////////////////////////
 	sf::RectangleShape player(sf::Vector2f(100.0f, 100.0f));
 	player.setPosition(50.0f, 500.0f);
@@ -136,46 +153,12 @@
 	}
 	/////////////////////////////////////////////////////  HP bar  //////////////////////////////////////////////////////////////////////////////////
 	HP calledhp;
-	float BossMax = 100.0f;
 	calledhp.HPboss();
 	float playerDamage = 0.0f;
-	float bossDamage =.0f;
-	/*sf::Texture blood;
-	sf::Texture heart;
-	heart.setSmooth(true);
-	blood.setSmooth(true);
-	sf::RectangleShape heartbox(sf::Vector2f(50.0f, 50.0f));
-	sf::RectangleShape bloodbar(sf::Vector2f(400.0f, 20.0f));
-	if(!heart.loadFromFile("img/heart-icon.png"))
-	{
-		printf("\ncant open heart_icon\n");
-	}
-	if (!blood.loadFromFile("img/HP_bar.png")) {
-		printf("\ncant open HP_bar\n");
-	}*/
+	float bossDamage =0.0f;
+	bool checkHP = false;
+	bool checkPlayerHP = false;
 
-	////////////////////////////////////////////////// heart icon /////////////////////////////////////////////////////////////////////////////////////
-	//bloodbar.setOutlineThickness(5.0f);
-	//bloodbar.setOutlineColor(sf::Color::Black);
-	//heartbox.setTexture(&heart);
-	//heartbox.setPosition(30.0f, 20.0f);
-
-	//bloodbar.setPosition(100.0f,35.0f);
-	////printf("x:%f y:%f",bloodbar.getPosition().x, bloodbar.getPosition().y);
-	//bloodbar.setTexture(&blood);
-	//float MyHP = 78000;
-	
-	/*sf::RectangleShape HP(sf::Vector2f(MyHP / 250.0f, 30));
-	HP.setPosition(sf::Vector2f(450, 46));
-	HP.setFillColor(sf::Color::Magenta);
-	HP.setSize(sf::Vector2f(MyHP / 320.f, 15));*/
-	
-	/*if (!bloodframe.loadFromFile("img/bloodframe.png")) 
-	{
-		printf("\ncant open HP_bar\n");
-	}*/
-
-	
 	/////////////////////////////////////////////////////////////   obstruct   /////////////////////////////////////////////////////////////////////////////////////////////
 	sf::Texture coral1;
 	sf::Texture coral2;
@@ -214,7 +197,7 @@
 						printf("\nNew window width: %d New window height: %d\n",event.size.width,event.size.height);
 						break;
 			}
-			if (event.type == event.Closed)
+			if (event.type == event.Closed || gameState == exitButton)
 			{
 				window.close();
 			}
@@ -225,106 +208,130 @@
 
 		//-----^^^^------ menu -----^^^^------//
 		
-		/*if (gameState == menustate)
+		if (gameState == menustate)
 		{
-			menu.update(deltaTime, sf::Mouse::isButtonPressed(sf::Mouse::Left), mousePosition);
-		}*/
-
-		////////////////////////////////////////// create bullet ////////////////////////////////////////////////////////////////////////////////
-		bull = bullet_time.getElapsedTime().asMilliseconds();
-		if (bull > 700) // it will be have item which increse time reloaded // 7 secs.
-		{
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
-			{
-				printf("\nMissile was released!\n");
-				bullet_vec.push_back(bullet(&bullet_texture, sf::Vector2u(2,1), 0.05f, sf::Vector2f(player.getPosition().x+25, player.getPosition().y + 35)));
-				bullet_time.restart();
-			}
+			menu.update(deltaTime, sf::Mouse::isButtonPressed(sf::Mouse::Left), mousePosition,gameState);
+			isGameOn = true;
 		}
-		collide.bulletAndBoss(bullet_vec, host,score, bossDamage);
-		for (bullet& bullet : bullet_vec) 
+		if (gameState == playbutton)
 		{
-			int i = 0;
-			if (bullet.bulletGetPosition().x >= 1080)
+			if (calledhp.currentHP <= 0 || calledhp.currentPlayerHP <= 0)
 			{
-				bullet_vec.erase(bullet_vec.begin()+i);
+				gameState = endGame;
 			}
-			else bullet.update(deltaTime);
-			i++;
+			////////////////////////////////////////// create bullet ////////////////////////////////////////////////////////////////////////////////
+			bull = bullet_time.getElapsedTime().asMilliseconds();
+			if (bull > 700) // it will be have item which increse time reloaded // 7 secs.
+			{
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
+				{
+					printf("\nMissile was released!\n");
+					bullet_vec.push_back(bullet(&bullet_texture, sf::Vector2u(2, 1), 0.05f, sf::Vector2f(player.getPosition().x + 25, player.getPosition().y + 35)));
+					bullet_time.restart();
+				}
+			}
+			collide.bulletAndBoss(bullet_vec, host, score, bossDamage, checkHP);
+			for (bullet& bullet : bullet_vec)
+			{
+				int i = 0;
+				if (bullet.bulletGetPosition().x >= 1080)
+				{
+					bullet_vec.erase(bullet_vec.begin() + i);
+				}
+				else
+				{
+					if(gameState != endGame)
+					{
+						bullet.update(deltaTime);
+					}
+				}
+				i++;
+
+			}
 			
-		}
-		
-		//std::cout << "size of bullet : " << bullet_vec.size() << std::endl;
+			//std::cout << "size of bullet : " << bullet_vec.size() << std::endl;
 
-		/////////////////////////////////////////////////////////  hostile  ///////////////////////////////////////////////////////////////////////////////////////////////
-		
-		//if(boss_time == 0) // ถ้าฆ่าลูกสมุนหมดเเล้ว/*{		}*/
-		
-		host.canMissileShoot(deltaTime,900.0f, &hostile_bullet);
-		collide.bulletBossAndPlayer(host, playerHitbox, playerDamage);
-		host.update(deltaTime,player.getPosition().y,player);
-		
-		/////////////////////////////////  obstruct  ////////////////////////////////
-		
-		//coral.update(deltaTime,mapSpeedx);
+			/////////////////////////////////////////////////////////  hostile  ///////////////////////////////////////////////////////////////////////////////////////////////
 
-		//--------------------  HP  ---------------------//
-		calledhp.update(deltaTime, bossDamage);
+			//if(boss_time == 0) // ถ้าฆ่าลูกสมุนหมดเเล้ว/*{		}*/
 
-		////////////////////////////////////////////////////  map motion  /////////////////////////////
-		ocean1.move(-0.1f, 0.0f);
-		ocean2.move(-0.1f, 0.0f);
-		oceanx++;
-		if (oceanx == 6000) {
-			ocean1.setPosition(0.0f, 0.0f);
-			ocean2.setPosition(2999.0f, 0.0f);
-			oceanx = 0;
+			host.canMissileShoot(deltaTime, 900.0f, &hostile_bullet);
+			collide.bulletBossAndPlayer(host, playerHitbox, playerDamage, checkPlayerHP);
+			if (gameState != endGame)
+			{
+				host.update(deltaTime, player.getPosition().y, player);
+			}
+
+			/////////////////////////////////  obstruct  ////////////////////////////////
+
+			//coral.update(deltaTime,mapSpeedx);
+
+			//--------------------  HP  ---------------------//
+			calledhp.HPbossUpdate(deltaTime, bossDamage, checkHP, gameState);
+			calledhp.HPplayerUpdate(deltaTime, playerDamage, checkPlayerHP, gameState);
+			if (gameState != endGame)
+			{
+				
+				////////////////////////////////////////////////////  map motion  /////////////////////////////
+
+				ocean1.move(-0.1f, 0.0f);
+				ocean2.move(-0.1f, 0.0f);
+				oceanx++;
+				if (oceanx == 6000) {
+					ocean1.setPosition(0.0f, 0.0f);
+					ocean2.setPosition(2999.0f, 0.0f);
+					oceanx = 0;
+				}
+			///--------------- player control -------------------///
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
+				{
+					if (player.getPosition().x >= 50) player.move(-0.2f, 0.0f);
+				}
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
+				{
+					player.move(0.2f, 0.0f);
+				}
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
+				{
+					player.move(0.0f, -0.2f);
+				}
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
+				{
+					player.move(0.0f, 0.2f);
+				}
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
+				{
+					window.close();
+				}
+			}
 		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
-		{
-			if(player.getPosition().x >= 50) player.move(-0.2f, 0.0f);
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-		{
-			player.move(0.2f, 0.0f);
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
-		{
-			player.move(0.0f, -0.2f);
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
-		{
-			player.move(0.0f, 0.2f);
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
-		{
-			window.close();
-		}
-		
-		//----------------------------
+		/////---------------------------- render ----------------------------/////
 		mousePosition.setPosition(sf::Vector2f(sf::Mouse::getPosition(window)));
 		window.clear();
 		
-		/*if (gameState == 0)
+		if (gameState == 0)
 		{
 			menu.draw(window);
 			window.draw(mousePosition);
-		}*/
+		}
 
 		/*window.draw(Obstacle[0]);
 		window.draw(Obstacle[1]);
 		window.draw(Obstacle[2]);*/
 		
 		//---game render---//
+		else {
+			menu.menutheme.stop();
 			window.draw(ocean1);
 			window.draw(ocean2);
 			window.draw(player);
 			window.draw(playerHitbox);
 			calledhp.draw(window);
-		for (bullet& bullet : bullet_vec)
-			bullet.draw(window);
-		
-		host.draw(window);
+			for (bullet& bullet : bullet_vec)
+				bullet.draw(window);
+			//window.draw(pauseButton);
+			host.draw(window);
+		}
 		//coral.draw(window);
 		//window.draw(HP);
 		window.display();

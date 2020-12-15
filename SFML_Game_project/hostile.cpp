@@ -56,10 +56,14 @@ void hostile::canMissileShoot(float deltaTime, float missileCooldown, sf::Textur
 
     if (body.getPosition().x <= 930)
     {
+        isShootting = rand() % 3 + 1;
         if (this->missileCooldown >= missileCooldown)
         {
             //this->missileCooldown -= missileCooldown;
-            missile.push_back(bullet(missile_texture, sf::Vector2u(3, 1), 0.1f, sf::Vector2f(body.getPosition().x-20 , body.getPosition().y +70)));
+            if (isShootting < 3)
+            {
+                missile.push_back(bullet(missile_texture, sf::Vector2u(3, 1), 0.1f, sf::Vector2f(body.getPosition().x - 20, body.getPosition().y + 70)));
+            }
             bull_boss.restart();
             //std::cout << "[boss]missile has been released" << std::endl;
         }

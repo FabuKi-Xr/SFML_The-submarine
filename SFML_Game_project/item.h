@@ -1,10 +1,15 @@
 #pragma once
 #include "game.h"
+#include "animation.h"
+
 class item
 {
 public:
 
-	item(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, sf::Vector2f position);
+	item();
+
 private:
+	//animation animate;
+	sf::Texture itemTexture;
 };
 

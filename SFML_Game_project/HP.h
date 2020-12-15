@@ -16,10 +16,11 @@ private:
 	sf::RectangleShape heartBodyBoss;
 	float deltaTime;
 	
-	float currentHP = 100;
-	float HPpercent;
+	float HPpercent=100;
+	float HPplayerPercent=100;
 	float damage=0 ;
 	float bossDamage;
+	sf::Vector2f scale;
 public:
 	HP();
 	void HPboss();
@@ -27,10 +28,10 @@ public:
 
 	//void playerHitBossDamage(float& bossDamage);
 
-	void update(float deltaTime, float &damage);
-
-	
-
+	void HPbossUpdate(float deltaTime, float &damage,bool &checkHP,int& gameState);
+	void HPplayerUpdate(float deltaTime, float& damage, bool& checkPlayerHP, int& gameState);
+	float currentHP = 100;
+	float currentPlayerHP = 100;
 	void draw(sf::RenderWindow& window);
 };
 

@@ -1,5 +1,6 @@
 #include "item.h"
 
-item::item(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, sf::Vector2f position)
+item::item()//:animate(itemTexture,sf::vector2u(3,1),1.0f)
 {
+
 }

@@ -1,6 +1,6 @@
 ﻿#include "Menugame.h"
 
-Menugame::Menugame(float width, float height)
+Menugame::Menugame(float width, float height,int gamestate)
 {
 	//loading resource
 	if (!MENU_BG.loadFromFile(MAIN_MENU_BACKGROUND_FILEPATH)) {
@@ -41,8 +41,31 @@ Menugame::Menugame(float width, float height)
 	{
 		printf("cant open bubble.png");
 	}
+	if (!howToPlay[0].loadFromFile(MAIN_HOW_TO_PLAY_BUTTON))
+	{
+		printf("cant open howToplay1");
+	}
+	if (!howToPlay[1].loadFromFile(MAIN_HOW_TO_PLAY_INTRO))
+	{
+		printf("cant open howtoplay2");
+	}
+	if (!nextButtonTexture.loadFromFile(MAIN_NEXT_BUTTTON))
+	{
+		std::cout << "cant open nextbutton" << std::endl;
+	}
+	if (!closeTexture.loadFromFile(MAIN_CLOSE_HOW_TO_PLAY))
+	{
+		std::cout << "cant open closeHowToPlay" << std::endl;
+	}
+	if (menutheme.openFromFile("soundtrack/menuTheme.ogg"))
+	{
+		std::cout << "cant open menuTheme.ogg" << std::endl;
+	}
+	menutheme.setVolume(80.0f);
+	menutheme.setLoop(true);
 	BG.setTexture(MENU_BG);
 
+	menutheme.play();
 	MENU_BG.setSmooth(true);
 	OBJECT.setSmooth(true);
 	ButtonTexture[0][0].setSmooth(true);
@@ -74,14 +97,32 @@ Menugame::Menugame(float width, float height)
 
 	exitButtonBody.setTexture(&ButtonTexture[2][0]);
 	exitButtonBody.setSize(sf::Vector2f(BUTTON_SCALEX, BUTTON_SCALEY));
-	exitButtonBody.setPosition(700.0f, 540.0f);
+	exitButtonBody.setPosition(700.0f, 560.0f);
 
+	// inithowtoplay //
+	howToPlay[0].setSmooth(true);
+	howToPlay[1].setSmooth(true);
+	howToplaypage.setTexture(&howToPlay[0]);
+	howToplaypage.setSize(sf::Vector2f(1080.0f, 720.0f));
+	howToplaypage.setPosition(sf::Vector2f(0.0f, 0.0f));
+
+	//  initNextButton  //
+	nextButtonTexture.setSmooth(true);
+	nextButton.setTexture(&nextButtonTexture);
+	nextButton.setSize(sf::Vector2f(100.0f,100.0f));
+	nextButton.setPosition(sf::Vector2f(800.0f,550.0f));
+
+	// initcloseButton //
+	closeTexture.setSmooth(true);
+	close.setTexture(&closeTexture);
+	close.setSize(sf::Vector2f(100.0f, 100.0f));
+	close.setPosition(sf::Vector2f(890.0f,45.0f));
 }
 Menugame::~Menugame()
 {
 
 }
-void Menugame::update(float deltaTime, bool mouseState, sf::CircleShape& MousePosition)
+void Menugame::update(float deltaTime, bool mouseState, sf::CircleShape& MousePosition,int &gameState)
 {
 	this->velocity;
 	velocity.x = 200.0f;
@@ -100,7 +141,8 @@ void Menugame::update(float deltaTime, bool mouseState, sf::CircleShape& MousePo
 	exitButtonBody.setTexture(&ButtonTexture[2][0]);
 	exitButtonState = Default;
 
-	if (playButtonBody.getGlobalBounds().intersects(MousePosition.getGlobalBounds()))
+	//std::cout << "state: " << isHowToPlayOn << std::endl;
+	if (playButtonBody.getGlobalBounds().intersects(MousePosition.getGlobalBounds()) && isHowToPlayOn == false)
 	{
 
 		if (playButtonState == Default)
@@ -115,12 +157,13 @@ void Menugame::update(float deltaTime, bool mouseState, sf::CircleShape& MousePo
 			playButtonBody.setTexture(&ButtonTexture[0][2]);
 			playButtonBody.setSize(sf::Vector2f(BUTTON_SCALEX, BUTTON_SCALEY));
 			playButtonBody.setPosition(700.0f, 280.0f);
-			mouseState == false;
+			gameState = 1;
+			mouseState = false;
 		}
 
 	}
 
-	if (optionButtonBody.getGlobalBounds().intersects(MousePosition.getGlobalBounds()))
+	if (optionButtonBody.getGlobalBounds().intersects(MousePosition.getGlobalBounds()) && isHowToPlayOn == false)
 	{
 
 		if (optionButtonState == Default)
@@ -136,11 +179,13 @@ void Menugame::update(float deltaTime, bool mouseState, sf::CircleShape& MousePo
 			optionButtonBody.setSize(sf::Vector2f(BUTTON_SCALEX, BUTTON_SCALEY));
 			optionButtonBody.setPosition(700.0f, 420.0f);
 			mouseState == false;
+			state = true;
+			isNextButtonOn = true;
 		}
 
 	}
 
-	if (exitButtonBody.getGlobalBounds().intersects(MousePosition.getGlobalBounds()))
+	if (exitButtonBody.getGlobalBounds().intersects(MousePosition.getGlobalBounds())&& isHowToPlayOn==false)
 	{
 
 		if (exitButtonState == Default)
@@ -155,9 +200,33 @@ void Menugame::update(float deltaTime, bool mouseState, sf::CircleShape& MousePo
 			exitButtonBody.setTexture(&ButtonTexture[2][2]);
 			exitButtonBody.setSize(sf::Vector2f(BUTTON_SCALEX, BUTTON_SCALEY));
 			exitButtonBody.setPosition(700.0f, 560.0f);
-			mouseState == false;
+			gameState = 2;
+			mouseState = false;
 		}
 
+	}
+	if (state == true)
+	{
+		isHowToPlayOn = true;
+		if (nextButton.getGlobalBounds().intersects(MousePosition.getGlobalBounds())&&mouseState == true)
+		{
+			howToplaypage.setTexture(&howToPlay[1]);
+			howToplaypage.setSize(sf::Vector2f(1080.0f, 720.0f));
+			howToplaypage.setPosition(sf::Vector2f(0.0f, 0.0f));
+			playButtonState == 100;
+			optionButtonState = 100;
+			exitButtonState = 100;
+			isNextButtonOn = false;
+		}
+		if (close.getGlobalBounds().intersects(MousePosition.getGlobalBounds()) && mouseState == true)
+		{
+			state = false;
+			isHowToPlayOn = false;
+			howToplaypage.setTexture(&howToPlay[0]);
+			howToplaypage.setSize(sf::Vector2f(1080.0f, 720.0f));
+			howToplaypage.setPosition(sf::Vector2f(0.0f, 0.0f));
+		}
+		mouseState = false;
 	}
 }
 void Menugame::draw(sf::RenderWindow& window)
@@ -167,7 +236,15 @@ void Menugame::draw(sf::RenderWindow& window)
 	window.draw(playButtonBody);
 	window.draw(optionButtonBody);
 	window.draw(exitButtonBody);
-
+	if (state == true)
+	{
+		window.draw(howToplaypage);
+		if (isNextButtonOn == true)
+		{
+			window.draw(nextButton);
+		}
+		window.draw(close);
+	}
 }
 
 

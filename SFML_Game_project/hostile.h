@@ -30,7 +30,7 @@ private:
 	unsigned int row;
 	sf::Vector2f velocity;
 	bool direction;
-	
+	int isShootting;
 
 	float missileCooldown;
 	sf::Clock bull_boss;
