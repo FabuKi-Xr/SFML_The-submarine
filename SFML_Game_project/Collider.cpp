@@ -9,7 +9,7 @@ Collider::~Collider()
 {
 }
 
-void Collider::bulletAndBoss(std::vector<bullet>& bull, hostile &host, int& score)
+void Collider::bulletAndBoss(std::vector<bullet>& bull, hostile &host, int& score, float& bossDamage,int checkHP)
 {
     for (int i = 0;i < bull.size();i++)
     {
@@ -19,6 +19,10 @@ void Collider::bulletAndBoss(std::vector<bullet>& bull, hostile &host, int& scor
                 std::cout << "crash into hitbox1" << std::endl;
                 bull.erase(bull.begin()+i);
                 score += 3500;
+                playerDamageToBoss = 12.5;
+                bossDamage = playerDamageToBoss;
+                //boss.playerHitBossDamage(playerDamageToBoss);
+                //boss.damage = playerDamageToBoss;
                 break;
             }
             if (bull[i].getGlobalBounds().intersects(host.hitbox2.getGlobalBounds()))
@@ -26,6 +30,10 @@ void Collider::bulletAndBoss(std::vector<bullet>& bull, hostile &host, int& scor
                 std::cout << "crash into hitbox2" << std::endl;
                 bull.erase(bull.begin() + i);
                 score += rand()%2001+1900;
+                playerDamageToBoss = 10.0;
+                bossDamage = playerDamageToBoss;
+                //boss.playerHitBossDamage(playerDamageToBoss);
+                //boss.damage = playerDamageToBoss;
                 break;
             }
             if (bull[i].getGlobalBounds().intersects(host.hitbox3.getGlobalBounds()))
@@ -33,6 +41,10 @@ void Collider::bulletAndBoss(std::vector<bullet>& bull, hostile &host, int& scor
                 std::cout << "crash into hitbox3" << std::endl;
                 bull.erase(bull.begin() + i);
                 score += rand()%1850+1700;
+                playerDamageToBoss = 10.0;
+                bossDamage = playerDamageToBoss;
+                //boss.playerHitBossDamage(playerDamageToBoss);
+                //boss.damage = playerDamageToBoss;
                 break;
             }
             if (bull[i].getGlobalBounds().intersects(host.hitbox4.getGlobalBounds()))
@@ -40,24 +52,32 @@ void Collider::bulletAndBoss(std::vector<bullet>& bull, hostile &host, int& scor
                 std::cout << "crash into hitbox4" << std::endl;
                 bull.erase(bull.begin() + i);
                 score += rand()%1700+1499;
+                playerDamageToBoss= 10.0;
+                bossDamage = playerDamageToBoss;
+                //boss.playerHitBossDamage(playerDamageToBoss);
+                //boss.damage = playerDamageToBoss;
                 break;
             }
     }
 }
-void Collider::bulletBossAndPlayer(hostile &host, sf::RectangleShape& player)
+void Collider::bulletBossAndPlayer(hostile &host, sf::RectangleShape& player, float& playerDamage)
 {
     for (int i = 0;i < host.missile.size();i++)
     {
-        //int i = 0;
         if (host.missile[i].getGlobalBounds().intersects(player.getGlobalBounds()))
         {
             std::cout << "crash into player!" << std::endl;
             host.missile.erase(host.missile.begin() + i);
             break;
         }
-       // i++;
     }
 }
+
+//float Collider::returnDamage(float damage)
+//{
+//    return damage;
+//}
+
 
 
 

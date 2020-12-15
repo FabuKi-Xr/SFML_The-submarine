@@ -10,14 +10,26 @@ private:
 	sf::RectangleShape heartBody;
 	sf::RectangleShape HPbarFrame;
 	sf::RectangleShape HPbarColor;
-	float deltaTime;
 
+	sf::RectangleShape HPbarFrameBoss;
+	sf::RectangleShape HPbarColorBoss;
+	sf::RectangleShape heartBodyBoss;
+	float deltaTime;
+	
+	float currentHP = 100;
+	float HPpercent;
+	float damage=0 ;
+	float bossDamage;
 public:
 	HP();
-
+	void HPboss();
 	//HP(sf::Texture *HPbar,float width,float height,float x,float y );
 
-	void update(float deltaTime,float damage);
+	//void playerHitBossDamage(float& bossDamage);
+
+	void update(float deltaTime, float &damage);
+
+	
 
 	void draw(sf::RenderWindow& window);
 };

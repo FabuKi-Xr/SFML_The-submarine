@@ -8,7 +8,7 @@
 class obstruct
 {
 public:
-	obstruct(sf::Texture* texture1, sf::Texture* texture2, float deltaTime);
+	obstruct(sf::Texture* texture1, sf::Texture* texture2);
 	void create(sf::Vector2f previousCoral);
 	void update(float deltaTime, float mapSpeed); // ตำเเหน่ง??
 	void draw(sf::RenderWindow &window);

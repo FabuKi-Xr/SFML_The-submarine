@@ -22,7 +22,7 @@ public:
 	void initHitbox();
 	void canMissileShoot(float deltaTime,float missileCooldown, sf::Texture *missile_texture);
 	std::vector<bullet> missile;
-
+	
 private:
 	sf::Texture texture;
 	float switchTime;

@@ -128,6 +128,7 @@
 
 	//====================hostile bullet=====================//
 	sf::Texture hostile_bullet;
+	hostile_bullet.setSmooth(true);
 	std::vector<bullet> boss_bullet;
 	if (!hostile_bullet.loadFromFile("img/missile_hostile1.png")) 
 	{
@@ -135,6 +136,10 @@
 	}
 	/////////////////////////////////////////////////////  HP bar  //////////////////////////////////////////////////////////////////////////////////
 	HP calledhp;
+	float BossMax = 100.0f;
+	calledhp.HPboss();
+	float playerDamage = 0.0f;
+	float bossDamage =.0f;
 	/*sf::Texture blood;
 	sf::Texture heart;
 	heart.setSmooth(true);
@@ -185,7 +190,7 @@
 	}
 	coral1.setSmooth(true);
 	coral2.setSmooth(true);
-
+	//obstruct coral(&coral1, &coral2);
 	////////////////////--------------------------------------------->>>  Game  <<<--------------------------------------------------/////////////////////////////////////////////// 
 	while (window.isOpen()) 
 	{
@@ -236,7 +241,7 @@
 				bullet_time.restart();
 			}
 		}
-		collide.bulletAndBoss(bullet_vec, host,score);
+		collide.bulletAndBoss(bullet_vec, host,score, bossDamage);
 		for (bullet& bullet : bullet_vec) 
 		{
 			int i = 0;
@@ -248,6 +253,7 @@
 			i++;
 			
 		}
+		
 		//std::cout << "size of bullet : " << bullet_vec.size() << std::endl;
 
 		/////////////////////////////////////////////////////////  hostile  ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -255,12 +261,15 @@
 		//if(boss_time == 0) // ถ้าฆ่าลูกสมุนหมดเเล้ว/*{		}*/
 		
 		host.canMissileShoot(deltaTime,900.0f, &hostile_bullet);
-		collide.bulletBossAndPlayer(host, playerHitbox);
+		collide.bulletBossAndPlayer(host, playerHitbox, playerDamage);
 		host.update(deltaTime,player.getPosition().y,player);
 		
 		/////////////////////////////////  obstruct  ////////////////////////////////
-		obstruct coral(&coral1, &coral2, deltaTime);
-		coral.update(deltaTime,mapSpeedx);
+		
+		//coral.update(deltaTime,mapSpeedx);
+
+		//--------------------  HP  ---------------------//
+		calledhp.update(deltaTime, bossDamage);
 
 		////////////////////////////////////////////////////  map motion  /////////////////////////////
 		ocean1.move(-0.1f, 0.0f);
@@ -312,12 +321,11 @@
 			window.draw(player);
 			window.draw(playerHitbox);
 			calledhp.draw(window);
-		
 		for (bullet& bullet : bullet_vec)
 			bullet.draw(window);
 		
 		host.draw(window);
-		coral.draw(window);
+		//coral.draw(window);
 		//window.draw(HP);
 		window.display();
 	}

@@ -61,7 +61,7 @@ void hostile::canMissileShoot(float deltaTime, float missileCooldown, sf::Textur
             //this->missileCooldown -= missileCooldown;
             missile.push_back(bullet(missile_texture, sf::Vector2u(3, 1), 0.1f, sf::Vector2f(body.getPosition().x-20 , body.getPosition().y +70)));
             bull_boss.restart();
-            std::cout << "[boss]missile has been released" << std::endl;
+            //std::cout << "[boss]missile has been released" << std::endl;
         }
     }  
 
@@ -124,7 +124,7 @@ void  hostile::update(float deltaTime,float posPlayer, sf::RectangleShape& playe
         i++;
         
     }
-    std::cout << "missile size: " << missile.size()<<std::endl;
+    //std::cout << "missile size: " << missile.size()<<std::endl;
 }
 void hostile::draw(sf::RenderWindow& window)
 {

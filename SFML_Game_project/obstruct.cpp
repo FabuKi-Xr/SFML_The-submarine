@@ -1,5 +1,5 @@
 ﻿#include "obstruct.h"
-obstruct::obstruct(sf::Texture *texture1, sf::Texture* texture2,float deltaTime)
+obstruct::obstruct(sf::Texture *texture1, sf::Texture* texture2)
 {
 
 	for (int i = 0;i < 3;i++)
