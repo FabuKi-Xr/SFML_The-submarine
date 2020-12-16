@@ -155,10 +155,12 @@
     <ClCompile Include="hostile.cpp" />
     <ClCompile Include="HP.cpp" />
     <ClCompile Include="item.cpp" />
+    <ClCompile Include="leaderboard.cpp" />
     <ClCompile Include="Menugame.cpp" />
     <ClCompile Include="obstruct.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="stage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animation.h" />
@@ -171,9 +173,11 @@
     <ClInclude Include="hostile.h" />
     <ClInclude Include="HP.h" />
     <ClInclude Include="item.h" />
+    <ClInclude Include="leaderboard.h" />
     <ClInclude Include="Menugame.h" />
     <ClInclude Include="obstruct.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="stage.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

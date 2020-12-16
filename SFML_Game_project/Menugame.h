@@ -66,5 +66,14 @@ private:
 	unsigned short playButtonState = Default; // start = 0
 	unsigned short optionButtonState = Default;
 	unsigned short exitButtonState = Default;
+
+	sf::Texture stageBGtexture;
+	sf::RectangleShape stageBG;
+	sf::Texture backTexture[3];
+	sf::RectangleShape back;
+	sf::Texture scoreTexture[3];
+	sf::RectangleShape score;
+	sf::Music buttontheme;
+	int gameState = 0;
 };
 

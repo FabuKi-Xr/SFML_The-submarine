@@ -72,9 +72,9 @@ void HP::HPbossUpdate(float deltaTime,float &damage,bool &checkHP,int &gameState
 	{
 		//currentHP = 100;
 		currentHP -= damage;
-		std::cout << "damage: " << damage << std::endl;
+		//std::cout << "damage: " << damage << std::endl;
 		HPpercent = currentHP / 100;
-		std::cout << "percent: " << HPpercent << std::endl;
+		//std::cout << "percent: " << HPpercent << std::endl;
 		scale.x = 200.0f;
 		HPbarColorBoss.setSize(sf::Vector2f(scale.x * HPpercent, HPbarColorBoss.getSize().y));
 		
@@ -99,7 +99,7 @@ void HP::HPbossUpdate(float deltaTime,float &damage,bool &checkHP,int &gameState
 		checkHP = 0;
 	}
 	damage = 0;
-	std::cout << "percent: " << HPpercent << std::endl;
+	//std::cout << "percent: " << HPpercent << std::endl;
 	//std::cout << "size x : " << HPbarColorBoss.getSize().x << std::endl;
 	
 }
@@ -111,11 +111,11 @@ void HP::HPplayerUpdate(float deltaTime, float& damage, bool& checkPlayerHP, int
 	{
 		//currentHP = 100;
 		currentPlayerHP -= damage;
-		std::cout << "damage: " << damage << std::endl;
+		//std::cout << "damage: " << damage << std::endl;
 		HPplayerPercent = currentPlayerHP / 100;
 
 		
-		std::cout << "percent: " << HPplayerPercent << std::endl;
+		//std::cout << "percent: " << HPplayerPercent << std::endl;
 		scale.x = 200.0f;
 		HPbarColor.setSize(sf::Vector2f(scale.x * HPplayerPercent, HPbarColor.getSize().y));
 		HPbarColor.setOutlineColor(sf::Color::Transparent);

@@ -5,6 +5,8 @@
 #include "hostile.h"
 #include "HP.h"
 #include "animation.h"
+#include <vector>
+#include "item.h"
 class Collider
 {
 public:
@@ -23,6 +25,5 @@ private:
 	int critical;
 	float bossDamageToPlayer;
 	float playerDamageToBoss;
-	/*sf::Texture objectTexture;
-	animation animate*/
+	//std::vector<item> sulfilizer;
 };

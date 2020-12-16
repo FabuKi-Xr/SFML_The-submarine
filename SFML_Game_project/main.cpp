@@ -13,6 +13,9 @@
 #include "hostile.h"
 #include "Collider.h"
 #include "obstruct.h"
+#include <fstream>
+#include <string>
+#include <sstream>
 //--------------------------------------------------->>> initial <<<---------------------------------------------------------------------------------//
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	int main() 
@@ -64,6 +67,7 @@
 
 	int gameState = menustate;
 	bool isGameOn = false;
+	int p=0;
 	Menugame menu(1080.0f, 720.0f, gameState);
 	//////////////////////////////////////////////////////////////////  Collider  ///////////////////////////////////////////////////////////////////////
 	
@@ -159,6 +163,71 @@
 	bool checkHP = false;
 	bool checkPlayerHP = false;
 
+	////////////////////// score ////////////////////////
+	
+	sf::Texture scoreTexture;
+	sf::Texture scoreButtonTexture[3];
+	sf::Texture backButtonTexture;
+	int isButtonOn = 1;
+	if (!scoreTexture.loadFromFile("img/score_endgame.png"))
+	{
+		std::cout << "cant open score_endgame" << std::endl;
+	}
+	if (!scoreButtonTexture[0].loadFromFile("img/highscore_default.png"))
+	{
+		std::cout << "cant open highscore_default" << std::endl;
+	}
+	if (!scoreButtonTexture[1].loadFromFile("img/highscoreButton_onclick.png"))
+	{
+		std::cout << "cant open highscore_onclick" << std::endl;
+	}
+	if (!scoreButtonTexture[2].loadFromFile("img/highscoreButton_clicked.png"))
+	{
+		std::cout << "cant open highscore_clicked" << std::endl;
+	}
+	sf::RectangleShape scoreButton;
+
+	scoreButtonTexture[0].setSmooth(true);
+	
+
+	scoreButtonTexture[1].setSmooth(true);
+	
+
+	scoreButtonTexture[2].setSmooth(true);
+
+	scoreTexture.setSmooth(true);
+	sf::RectangleShape scoreRect;
+	scoreRect.setTexture(&scoreTexture);
+	scoreRect.setPosition(sf::Vector2f(0.0f, 0.0f));
+	scoreRect.setSize(sf::Vector2f(1080.0f,720.0f));
+
+	sf::Texture highScoreTexture;
+	if (!highScoreTexture.loadFromFile("img/scoreboard.png"))
+	{
+		std::cout << "cant open scoreboard.png" << std::endl;
+	}
+	sf::RectangleShape highScore;
+	highScore.setTexture(&highScoreTexture);
+	highScore.setSize(sf::Vector2f(1080.0f, 720.0f));
+	highScore.setPosition(sf::Vector2f(0.0f, 0.0f));
+	sf::Font scoreFont;
+	if (!scoreFont.loadFromFile("font/CookieRun Black.ttf")) 
+	{
+		std::cout << "cant open cookierun black" << std::endl;
+	}
+	sf::Text playScore;
+	playScore.setFont(scoreFont);
+	playScore.setFillColor(sf::Color::White);
+	std::string playerName;
+	std::ostringstream Score;
+	Score.str(" ");
+	Score << "  " << score;
+	playScore.setCharacterSize(35);    
+	playScore.setPosition(sf::Vector2f(490.0f,225.0f));
+
+	/////////////////// item ///////////////////////
+	sf::Texture sulfilizerTexture;
+	
 	/////////////////////////////////////////////////////////////   obstruct   /////////////////////////////////////////////////////////////////////////////////////////////
 	sf::Texture coral1;
 	sf::Texture coral2;
@@ -201,9 +270,9 @@
 			{
 				window.close();
 			}
+			
 		}
 		//----- hitbox update -----//
-
 		playerHitbox.setPosition(sf::Vector2f(player.getPosition().x + 10, player.getPosition().y + 10));
 
 		//-----^^^^------ menu -----^^^^------//
@@ -218,6 +287,12 @@
 			if (calledhp.currentHP <= 0 || calledhp.currentPlayerHP <= 0)
 			{
 				gameState = endGame;
+				playScore.setString(std::to_string(score));
+				scoreButton.setTexture(&scoreButtonTexture[0]);
+				scoreButton.setSize(sf::Vector2f(400.0f, 120.0f));
+				scoreButton.setPosition(sf::Vector2f(640.0f, 570.0f));
+				mousePosition.setPosition(sf::Vector2f(sf::Mouse::getPosition(window)));
+				std::cout << "button: " << isButtonOn << std::endl;
 			}
 			////////////////////////////////////////// create bullet ////////////////////////////////////////////////////////////////////////////////
 			bull = bullet_time.getElapsedTime().asMilliseconds();
@@ -271,7 +346,6 @@
 			calledhp.HPplayerUpdate(deltaTime, playerDamage, checkPlayerHP, gameState);
 			if (gameState != endGame)
 			{
-				
 				////////////////////////////////////////////////////  map motion  /////////////////////////////
 
 				ocean1.move(-0.1f, 0.0f);
@@ -289,15 +363,15 @@
 				}
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
 				{
-					player.move(0.2f, 0.0f);
+					if (player.getPosition().x <= 1030)player.move(0.2f, 0.0f);
 				}
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
 				{
-					player.move(0.0f, -0.2f);
+					if(player.getPosition().y >= 100) player.move(0.0f, -0.2f);
 				}
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
 				{
-					player.move(0.0f, 0.2f);
+					if (player.getPosition().y <= 670)player.move(0.0f, 0.2f);
 				}
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
 				{
@@ -309,19 +383,8 @@
 		mousePosition.setPosition(sf::Vector2f(sf::Mouse::getPosition(window)));
 		window.clear();
 		
-		if (gameState == 0)
-		{
-			menu.draw(window);
-			window.draw(mousePosition);
-		}
-
-		/*window.draw(Obstacle[0]);
-		window.draw(Obstacle[1]);
-		window.draw(Obstacle[2]);*/
-		
 		//---game render---//
-		else {
-			menu.menutheme.stop();
+			
 			window.draw(ocean1);
 			window.draw(ocean2);
 			window.draw(player);
@@ -331,9 +394,42 @@
 				bullet.draw(window);
 			//window.draw(pauseButton);
 			host.draw(window);
-		}
-		//coral.draw(window);
-		//window.draw(HP);
+			//coral.draw(window);
+			//window.draw(HP);
+			if (gameState == endGame)
+			{
+				window.draw(scoreRect);
+				window.draw(playScore);
+				window.draw(scoreButton);
+				if (isButtonOn == false)
+				{
+					window.draw(highScore);
+				}
+				if (isButtonOn == true)
+				{
+					scoreButton.setTexture(&scoreButtonTexture[0]);
+					if (scoreButton.getGlobalBounds().intersects(mousePosition.getGlobalBounds()))
+					{
+						scoreButton.setTexture(&scoreButtonTexture[1]);
+						scoreButton.setSize(sf::Vector2f(400.0f, 120.0f));
+						scoreButton.setPosition(sf::Vector2f(640.0f, 570.0f));
+					}
+					if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+					{
+						scoreButton.setTexture(&scoreButtonTexture[2]);
+						scoreButton.setSize(sf::Vector2f(400.0f, 120.0f));
+						scoreButton.setPosition(sf::Vector2f(640.0f, 570.0f));
+						isButtonOn = 0;
+					}
+				}
+			}
+			if (gameState == menustate)
+			{
+				menu.draw(window);
+				window.draw(mousePosition);
+			}
+			if(gameState != menustate) menu.menutheme.stop();
+
 		window.display();
 	}
 	return 0;
