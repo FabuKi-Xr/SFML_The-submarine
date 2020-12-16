@@ -1,6 +1,7 @@
 #pragma once
 #include "game.h"
 #include "animation.h"
+#include "Collider.h"
 class item
 {
 public:

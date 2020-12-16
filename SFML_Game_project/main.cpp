@@ -16,10 +16,14 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <algorithm>
+#include <utility>
+using namespace std;
 //--------------------------------------------------->>> initial <<<---------------------------------------------------------------------------------//
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	int main() 
 	{
+		
 	srand(time(NULL));
 	int oceanx = 0;
 	sf::Clock cl;
@@ -30,6 +34,7 @@
 	sf::Clock bullet_time;
 	float deltaTime = 0.0f;
 
+	sf::Clock pauseClock;
 	/////////////////////// time for obstruct  /////////////////////////////
 
 	sf::Clock obstruct_time;
@@ -41,7 +46,7 @@
 	float boss;
 	sf::Clock bossBullet_time;
 	float bull_boss;
-
+	bool saveScore = false;
 	//////////////////////  time for obstacle  ////////////////////////////////
 	float obstacle_time;
 	sf::Clock obstacle_cl;
@@ -155,6 +160,14 @@
 	{
 		printf("cant open missile hostile pic!");
 	}
+	////// music /////
+	sf::Music themesong;
+	if (!themesong.openFromFile("soundtrack/themeSong.ogg"))
+	{
+		std::cout << "cant open themsong" << std::endl;
+	}
+	themesong.setVolume(80);
+	themesong.play();
 	/////////////////////////////////////////////////////  HP bar  //////////////////////////////////////////////////////////////////////////////////
 	HP calledhp;
 	calledhp.HPboss();
@@ -164,10 +177,46 @@
 	bool checkPlayerHP = false;
 
 	////////////////////// score ////////////////////////
-	
+	bool isHighScore = false;
 	sf::Texture scoreTexture;
 	sf::Texture scoreButtonTexture[3];
-	sf::Texture backButtonTexture;
+	std::ofstream fileWriter;
+	std::string user_name ="";
+	sf::String playerInput;
+	std::fstream myFile;
+	std::ostringstream keyname;
+	sf::Text Keyname;
+	sf::Font nameScore;
+	if (!nameScore.loadFromFile("font/CookieRun Black.ttf"))
+	{
+		std::cout << "cant open cookie run font" << std::endl;
+	}
+	Keyname.setCharacterSize(40);
+	Keyname.setString(" ");
+	Keyname.setFont(nameScore);
+	Keyname.setFillColor(sf::Color::Black);
+	Keyname.setPosition(300, 500);
+	char last_char = ' ';
+	sf::Text text("", nameScore);
+	text.setFillColor(sf::Color::White);
+	text.setPosition(430, 415);
+
+	sf::Text player_Name;
+	player_Name.setFont(nameScore);
+	player_Name.setPosition(360.0f,385.0f);
+	player_Name.setCharacterSize(48);
+	player_Name.setFillColor(sf::Color(157,62,246));
+	float totalTime_cursor = 0;
+	sf::Clock clock_cursor;
+
+	std::map<int, std::string> keepscore;
+	std::ifstream fileReader;
+	std::string word;
+
+	sf::Text text1("", nameScore);
+	text1.setCharacterSize(40);
+	text1.setFillColor(sf::Color(48, 55, 42));
+
 	int isButtonOn = 1;
 	if (!scoreTexture.loadFromFile("img/score_endgame.png"))
 	{
@@ -186,7 +235,20 @@
 		std::cout << "cant open highscore_clicked" << std::endl;
 	}
 	sf::RectangleShape scoreButton;
+	sf::Texture backToMenu[3];
 
+	if (!scoreButtonTexture[0].loadFromFile("img/highscore_default.png"))
+	{
+		std::cout << "cant open highscore_default" << std::endl;
+	}
+	if (!scoreButtonTexture[1].loadFromFile("img/highscoreButton_onclick.png"))
+	{
+		std::cout << "cant open highscore_onclick" << std::endl;
+	}
+	if (!scoreButtonTexture[2].loadFromFile("img/highscoreButton_clicked.png"))
+	{
+		std::cout << "cant open highscore_clicked" << std::endl;
+	}
 	scoreButtonTexture[0].setSmooth(true);
 	
 
@@ -227,7 +289,11 @@
 
 	/////////////////// item ///////////////////////
 	sf::Texture sulfilizerTexture;
-	
+	if (!sulfilizerTexture.loadFromFile("img/diamondSprite"))
+	{
+		std::cout << "cant open diamondSprite" << std::endl;
+	}
+
 	/////////////////////////////////////////////////////////////   obstruct   /////////////////////////////////////////////////////////////////////////////////////////////
 	sf::Texture coral1;
 	sf::Texture coral2;
@@ -290,7 +356,7 @@
 				playScore.setString(std::to_string(score));
 				scoreButton.setTexture(&scoreButtonTexture[0]);
 				scoreButton.setSize(sf::Vector2f(400.0f, 120.0f));
-				scoreButton.setPosition(sf::Vector2f(640.0f, 570.0f));
+				scoreButton.setPosition(sf::Vector2f(350.0f, 570.0f));
 				mousePosition.setPosition(sf::Vector2f(sf::Mouse::getPosition(window)));
 				std::cout << "button: " << isButtonOn << std::endl;
 			}
@@ -367,7 +433,7 @@
 				}
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
 				{
-					if(player.getPosition().y >= 100) player.move(0.0f, -0.2f);
+					if(player.getPosition().y >= 250) player.move(0.0f, -0.2f);
 				}
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
 				{
@@ -401,10 +467,6 @@
 				window.draw(scoreRect);
 				window.draw(playScore);
 				window.draw(scoreButton);
-				if (isButtonOn == false)
-				{
-					window.draw(highScore);
-				}
 				if (isButtonOn == true)
 				{
 					scoreButton.setTexture(&scoreButtonTexture[0]);
@@ -412,24 +474,137 @@
 					{
 						scoreButton.setTexture(&scoreButtonTexture[1]);
 						scoreButton.setSize(sf::Vector2f(400.0f, 120.0f));
-						scoreButton.setPosition(sf::Vector2f(640.0f, 570.0f));
+						scoreButton.setPosition(sf::Vector2f(350.0f, 570.0f));
 					}
-					if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+					if (scoreButton.getGlobalBounds().intersects(mousePosition.getGlobalBounds()) and sf::Mouse::isButtonPressed(sf::Mouse::Left))
 					{
 						scoreButton.setTexture(&scoreButtonTexture[2]);
 						scoreButton.setSize(sf::Vector2f(400.0f, 120.0f));
-						scoreButton.setPosition(sf::Vector2f(640.0f, 570.0f));
+						scoreButton.setPosition(sf::Vector2f(350.0f, 570.0f));
 						isButtonOn = 0;
+						isHighScore = true;
+						
 					}
+					if (event.type == sf::Event::TextEntered && last_char != event.text.unicode)
+					{
+						if (event.text.unicode == 13)
+						{ //enter
+							user_name = playerInput;
+							playerInput.clear();
+							saveScore = true;
+						}
+						else if (event.text.unicode == 8 && playerInput.getSize() >= 0)
+						{ // backspace delete
+							playerInput = playerInput.substring(0, playerInput.getSize() - 1);
+						}
+						else
+						{
+							if (playerInput.getSize() < 11)
+							{
+								if (pauseClock.getElapsedTime().asSeconds() > 0.2)
+								{
+									playerInput += event.text.unicode;
+								}
+							}
+						}
+						last_char = event.text.unicode;
+						player_Name.setString(playerInput);
+					}
+					//else if (event.type == sf::Event::EventType::KeyReleased && last_char != ' ')
+					//{
+					//	last_char = ' ';
+					//}
+					 if (saveScore == true)
+						{
+							std::vector<pair<string, int > > eachscore;
+							string temp, tempString;
+							int tempInt = 0, X = 1;
+							while (window.pollEvent(event))
+							{
+								if (event.type == sf::Event::Closed)
+									window.close();
+								fileWriter.open("leaderboard.txt", std::ios::out | std::ios::app);
+								fileWriter << "\n" << user_name << "," << score ;
+								fileWriter.close();
+								playerInput.clear();
+							}
+							myFile.close();
+						}
+				window.draw(player_Name);
 				}
+
 			}
 			if (gameState == menustate)
 			{
 				menu.draw(window);
 				window.draw(mousePosition);
 			}
-			if(gameState != menustate) menu.menutheme.stop();
+			if (gameState != menustate)
+			{
+				menu.menutheme.stop();
+				themesong.setLoop(true);
+			}
+			while (isHighScore == true)
+			{
+				sf::Event event;
+				while (window.pollEvent(event))
+				{
+					switch (event.type)
+					{
 
+					case sf::Event::KeyReleased:
+						break;
+
+					case sf::Event::Closed:
+						window.close();
+						printf("\nWindow have closed\n");
+						break;
+
+					case sf::Event::Resized:
+						printf("\nNew window width: %d New window height: %d\n", event.size.width, event.size.height);
+						break;
+					}
+					if (event.type == event.Closed || gameState == exitButton)
+					{
+						window.close();
+					}
+
+				}
+				if (isButtonOn == false)
+				{
+					window.draw(highScore);
+				}
+				fileReader.open("leaderBoard.txt");
+				do
+				{
+					fileReader >> word;
+					std::string first_token = word.substr(0, word.find(','));
+					int second_token = std::stoi(word.substr(word.find(',') + 1, word.length()));
+					keepscore[second_token] = first_token;
+				} while (fileReader.good());
+				fileReader.close();
+				std::map<int, std::string >::iterator end = keepscore.end();
+				std::map<int, std::string >::iterator beg = keepscore.begin();
+				end--;
+				beg--;
+				int currentDisplay = 0;
+				for (std::map<int, std::string>::iterator it = end; it != beg; it--)
+				{
+					text1.setString(it->second);//name
+					text1.setPosition(450.0f, 170.0f + (85*currentDisplay));
+					window.draw(text1);
+					text1.setString(std::to_string(it->first)); //score
+					text1.setPosition(800.0f, 170.0f + (85 * currentDisplay));
+					window.draw(text1);
+					currentDisplay++;
+					if (currentDisplay == 5)
+					{
+						isHighScore = false;
+						break;
+					}
+				}
+				window.display();
+			}
 		window.display();
 	}
 	return 0;

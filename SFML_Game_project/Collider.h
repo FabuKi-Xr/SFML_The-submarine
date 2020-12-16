@@ -4,9 +4,7 @@
 #include "bullet.h"
 #include "hostile.h"
 #include "HP.h"
-#include "animation.h"
 #include <vector>
-#include "item.h"
 class Collider
 {
 public:
