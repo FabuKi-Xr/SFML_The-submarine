@@ -2,6 +2,12 @@
 
 hostile::hostile(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, sf::Vector2f position) : animate(texture, imageCount, switchTime)
 {
+    if (!missileBossSound.openFromFile("soundtrack/missilebosssound.ogg"))
+    {
+        std::cout << "cant open missilebosssound.ogg" << std::endl;
+    }
+    
+    missileBossSound.setVolume(50.0f);
     this->row = 0;
     body.setSize(sf::Vector2f(300.0f, 150.0f));
     body.setScale(1.5,1.5);
@@ -62,7 +68,9 @@ void hostile::canMissileShoot(float deltaTime, float missileCooldown, sf::Textur
             //this->missileCooldown -= missileCooldown;
             if (isShootting < 3)
             {
+                missileBossSound.stop();
                 missile.push_back(bullet(missile_texture, sf::Vector2u(3, 1), 0.1f, sf::Vector2f(body.getPosition().x - 20, body.getPosition().y + 70)));
+                missileBossSound.play();
             }
             bull_boss.restart();
             //std::cout << "[boss]missile has been released" << std::endl;
@@ -128,11 +136,24 @@ void  hostile::update(float deltaTime,float posPlayer, sf::RectangleShape& playe
         i++;
         
     }
+    for (item& item : sulfilizer)
+    {
+        int i = 0;
+        if (sulfilizer[i].sulfilizerGetPosition().y >= 720)
+        {
+            sulfilizer.erase(sulfilizer.begin() + i);
+        }
+        else item.updateSulfilizer(deltaTime);
+        //std::cout << "missile size: " << missile.size() << std::endl;
+        i++;
+
+    }
     //std::cout << "missile size: " << missile.size()<<std::endl;
 }
 void hostile::draw(sf::RenderWindow& window)
 {
-    
+    for (item& item : sulfilizer)
+        item.draw(window);
     window.draw(body);
     window.draw(hitbox1);
     window.draw(hitbox2);

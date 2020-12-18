@@ -3,6 +3,7 @@
 #include "animation.h"
 #include "bullet.h"
 #include <vector>
+#include "item.h"
 class hostile
 {
 
@@ -22,7 +23,11 @@ public:
 	void initHitbox();
 	void canMissileShoot(float deltaTime,float missileCooldown, sf::Texture *missile_texture);
 	std::vector<bullet> missile;
-	
+	sf::Music missileBossSound;
+	std::vector<item> sulfilizer;
+	sf::Texture sulfilizerTexture;
+
+
 private:
 	sf::Texture texture;
 	float switchTime;
@@ -34,5 +39,7 @@ private:
 
 	float missileCooldown;
 	sf::Clock bull_boss;
+	
+	
 };
 

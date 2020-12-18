@@ -15,8 +15,12 @@ public:
 private:
 	sf::RectangleShape body;
 	int state;
+	int coralCount=0;
 	std::vector<drawobstacle> coral;
+	float randX = 0;
+	float randY = 0;
 };
+
 //
 //	void coralUpdate(float deltaTime , float mapVelocity);
 //

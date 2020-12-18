@@ -1,6 +1,7 @@
 #pragma once
 #include "animation.h"
 #include<SFML\Graphics.hpp>
+#include "item.h"
 class bullet
 {
 private:
@@ -11,14 +12,6 @@ private:
     animation animate;
     unsigned int row;
     sf::Vector2f velocity;
-    /*animation updatebullet;
-	animation Animation;
-	animation UpdateBullet;
-    int faceD;
-    float speed;
-    sf::RectangleShape body;
-    unsigned int row;
-    sf::Vector2f velocity;*/
     
 public: 
     void update_bullet_hostile(float deltaTime);
@@ -30,18 +23,5 @@ public:
     sf::FloatRect getGlobalBounds();
 
     sf::Vector2f bulletGetPosition();
-    /*void updateUP(float deltaTime);
-    void updateDOWN(float deltaTime);
-    void updateRIGHT(float deltaTime);
-    void updateLEFT(float deltaTime);
-    void attackL(sf::Vector2f pos);
-    void attackR(sf::Vector2f pos);
-    void attackU(sf::Vector2f pos);
-    void attackD(sf::Vector2f pos);
-    void draw(sf::RenderWindow& window);
-    void deletepoke();*/
-	
-   /* sf::Vector2f GetPosition() { return body.getPosition(); }
-    Collision GetCollider() { return Collision(body); }*/
 };
 

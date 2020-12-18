@@ -148,7 +148,6 @@
     <ClCompile Include="animation.cpp" />
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="Button.cpp" />
-    <ClCompile Include="Class.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="drawobstacle.cpp" />
     <ClCompile Include="game.cpp" />

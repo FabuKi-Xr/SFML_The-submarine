@@ -85,7 +85,7 @@ void HP::HPbossUpdate(float deltaTime,float &damage,bool &checkHP,int &gameState
 		}
 		if (HPbarColorBoss.getSize().x < 10)
 		{
-			HPbarColorBoss.setPosition(HPbarColorBoss.getPosition().x+0.1 , 45.0f);
+			HPbarColorBoss.setPosition(HPbarColorBoss.getPosition().x + 0.3 , 45.0f);
 		}
 		else if (HPbarColorBoss.getSize().x < 0)
 		{
@@ -93,7 +93,7 @@ void HP::HPbossUpdate(float deltaTime,float &damage,bool &checkHP,int &gameState
 		}
 		else 
 		{
-			HPbarColorBoss.setPosition(HPbarColorBoss.getPosition().x-0.7 , 45.0f);
+			HPbarColorBoss.setPosition(HPbarColorBoss.getPosition().x - 0.1 , 45.0f);
 		}
 		
 		checkHP = 0;

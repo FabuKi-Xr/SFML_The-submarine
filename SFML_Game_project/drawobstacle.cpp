@@ -15,7 +15,8 @@ drawobstacle::~drawobstacle()
 }
 void  drawobstacle::update(float deltaTime,float mapSpeed)
 {
-    velocity.x = mapSpeed;
+    std::cout << "drawobstacle update!" << std::endl;
+    velocity.x = -mapSpeed;
     body.move(velocity * deltaTime);
 
 }

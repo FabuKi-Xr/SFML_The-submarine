@@ -85,7 +85,7 @@ Menugame::Menugame(float width, float height,int gamestate)
 	{
 		std::cout << "cant open buttonSound.ogg" << std::endl;
 	}
-	buttontheme.setVolume(40.0f);
+	buttontheme.setVolume(30.0f);
 
 	menutheme.play();
 	MENU_BG.setSmooth(true);

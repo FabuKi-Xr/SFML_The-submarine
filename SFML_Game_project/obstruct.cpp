@@ -1,20 +1,23 @@
 ﻿#include "obstruct.h"
 obstruct::obstruct(sf::Texture *texture1, sf::Texture* texture2)
 {
-
-	for (int i = 0;i < 3;i++)
+	state = rand() % 2;
+	for (int i = coralCount;i < 3;i++)
 	{
-		//rand() % 3 + 1;
 		if (state == 1) //state เปลี่ยนรูป
 		{
-			coral.push_back(drawobstacle(texture1, sf::Vector2f(rand() % 100 + 1080, 400.0f)));
-			std::cout << "x:%f y:%f" << coral[i].obstacleGetPosition().x << coral[i].obstacleGetPosition().y << std::endl;
+			randX = rand() % 500 + 300; 
+			coral.push_back(drawobstacle(texture1, sf::Vector2f(randX+ 1080, 400.0f)));
+			std::cout << "x: " << coral[i].obstacleGetPosition().x << "y: " << coral[i].obstacleGetPosition().y << std::endl;
+			coralCount++;
 			break;
 		}
 		else
 		{
-			coral.push_back(drawobstacle(texture2, sf::Vector2f(rand() % 100 + 1080, 400.0f)));
-			std::cout << "x:%f y:%f" << coral[i].obstacleGetPosition().x << coral[i].obstacleGetPosition().y << std::endl;
+			randX = rand() % 500 + 300;
+			coral.push_back(drawobstacle(texture2, sf::Vector2f(randX + 1080, 400.0f)));
+			std::cout << "x: " << coral[i].obstacleGetPosition().x << "y: " << coral[i].obstacleGetPosition().y << std::endl;
+			coralCount++;
 			break;
 		}
 	}
@@ -28,6 +31,7 @@ void obstruct::update(float deltaTime,float mapSpeed)
 		if (coral[i].obstacleGetPosition().x <= 5)
 		{
 			coral.erase(coral.begin() + i);
+			coralCount++;
 		}
 		else
 		{

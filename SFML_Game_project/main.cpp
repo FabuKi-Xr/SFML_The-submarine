@@ -18,6 +18,7 @@
 #include <sstream>
 #include <algorithm>
 #include <utility>
+#include "item.h"
 using namespace std;
 //--------------------------------------------------->>> initial <<<---------------------------------------------------------------------------------//
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,7 +62,7 @@ using namespace std;
 	mousePosition.setRadius(10.0f);
 	mousePosition.setOrigin(5.0f,5.0f);
 	
-	int score = 0;
+	
 	//////////////////////////////////////////////////////  render window game  ///////////////////////////////////////////////////////////////////////////
 
 	sf::RenderWindow window(sf::VideoMode(1080, 720), "The marine", sf::Style::Default );
@@ -71,9 +72,38 @@ using namespace std;
 	enum valueState { menustate=0 ,playbutton ,exitButton,selectStage ,endGame };
 
 	int gameState = menustate;
+	int score = 0;
 	bool isGameOn = false;
 	int p=0;
 	Menugame menu(1080.0f, 720.0f, gameState);
+	/// include music ///
+	sf::Music buttontheme;
+	if (!buttontheme.openFromFile("soundtrack/buttonSound.ogg"))
+	{
+		std::cout << "cant open buttonSound.ogg" << std::endl;
+	}
+	buttontheme.setVolume(30.0f);
+
+	sf::Music victorySound;
+	if (!victorySound.openFromFile("soundtrack/victory.ogg"))
+	{
+		std::cout << "cant open victory.ogg" << std::endl;
+	}
+	victorySound.setVolume(30.0f);
+
+	sf::Music gameOverSound;
+	if (!gameOverSound.openFromFile("soundtrack/gameover.ogg"))
+	{
+		std::cout << "cant open gameover.ogg" << std::endl;
+	}
+	gameOverSound.setVolume(30.0f);
+
+	sf::Music missileSound;
+	if (!missileSound.openFromFile("soundtrack/releasesound.ogg"))
+	{
+		std::cout << "cant open releasesound.ogg" << std::endl;
+	}
+	missileSound.setVolume(5.0f);
 	//////////////////////////////////////////////////////////////////  Collider  ///////////////////////////////////////////////////////////////////////
 	
 	Collider collide;
@@ -166,8 +196,8 @@ using namespace std;
 	{
 		std::cout << "cant open themsong" << std::endl;
 	}
-	themesong.setVolume(80);
-	themesong.play();
+	themesong.setVolume(40);
+	bool isSongOpen = false;
 	/////////////////////////////////////////////////////  HP bar  //////////////////////////////////////////////////////////////////////////////////
 	HP calledhp;
 	calledhp.HPboss();
@@ -289,15 +319,15 @@ using namespace std;
 
 	/////////////////// item ///////////////////////
 	sf::Texture sulfilizerTexture;
-	if (!sulfilizerTexture.loadFromFile("img/diamondSprite"))
+	if (!sulfilizerTexture.loadFromFile("img/diamondSprite.png"))
 	{
-		std::cout << "cant open diamondSprite" << std::endl;
+		std::cout << "cant open diamondSprite.png" << std::endl;
 	}
-
+	sulfilizerTexture.setSmooth(true);
 	/////////////////////////////////////////////////////////////   obstruct   /////////////////////////////////////////////////////////////////////////////////////////////
 	sf::Texture coral1;
 	sf::Texture coral2;
-	int coralState;
+	int coralState = 0;
 	if (!coral1.loadFromFile("img/coral1.png"))
 	{
 		std::cout << "cant open coral1.png" << std::endl;
@@ -308,10 +338,11 @@ using namespace std;
 	}
 	coral1.setSmooth(true);
 	coral2.setSmooth(true);
-	//obstruct coral(&coral1, &coral2);
+	obstruct coral(&coral1,&coral2);
 	////////////////////--------------------------------------------->>>  Game  <<<--------------------------------------------------/////////////////////////////////////////////// 
 	while (window.isOpen()) 
 	{
+		
 		deltaTime = cl.restart().asSeconds();
 		if (deltaTime > 1.0f / 60.0f) { deltaTime = 1.0f / 60.0f; }
 		sf::Event event;
@@ -347,31 +378,49 @@ using namespace std;
 		{
 			menu.update(deltaTime, sf::Mouse::isButtonPressed(sf::Mouse::Left), mousePosition,gameState);
 			isGameOn = true;
+			themesong.stop();
 		}
 		if (gameState == playbutton)
 		{
+			if (isSongOpen == false)
+			{
+				themesong.play();
+				isSongOpen = true;
+			}
 			if (calledhp.currentHP <= 0 || calledhp.currentPlayerHP <= 0)
 			{
 				gameState = endGame;
+				themesong.stop();
+				if (calledhp.currentHP <= 0) 
+				{
+					victorySound.play(); 
+				}
+				else 
+				{ 
+					gameOverSound.play(); 
+				}
 				playScore.setString(std::to_string(score));
 				scoreButton.setTexture(&scoreButtonTexture[0]);
 				scoreButton.setSize(sf::Vector2f(400.0f, 120.0f));
 				scoreButton.setPosition(sf::Vector2f(350.0f, 570.0f));
 				mousePosition.setPosition(sf::Vector2f(sf::Mouse::getPosition(window)));
-				std::cout << "button: " << isButtonOn << std::endl;
+				///std::cout << "button: " << isButtonOn << std::endl;
 			}
 			////////////////////////////////////////// create bullet ////////////////////////////////////////////////////////////////////////////////
 			bull = bullet_time.getElapsedTime().asMilliseconds();
-			if (bull > 700) // it will be have item which increse time reloaded // 7 secs.
+			if (bull > 800) // it will be have item which increse time reloaded // 7 secs.
 			{
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
 				{
+					missileSound.stop();
 					printf("\nMissile was released!\n");
 					bullet_vec.push_back(bullet(&bullet_texture, sf::Vector2u(2, 1), 0.05f, sf::Vector2f(player.getPosition().x + 25, player.getPosition().y + 35)));
+					missileSound.play();
 					bullet_time.restart();
 				}
 			}
-			collide.bulletAndBoss(bullet_vec, host, score, bossDamage, checkHP);
+			collide.bulletAndBoss(bullet_vec, host, score, bossDamage, checkHP, &sulfilizerTexture);
+			collide.sulfilizerAndPlayer(host, host.sulfilizer, player, score);
 			for (bullet& bullet : bullet_vec)
 			{
 				int i = 0;
@@ -398,6 +447,7 @@ using namespace std;
 
 			host.canMissileShoot(deltaTime, 900.0f, &hostile_bullet);
 			collide.bulletBossAndPlayer(host, playerHitbox, playerDamage, checkPlayerHP);
+
 			if (gameState != endGame)
 			{
 				host.update(deltaTime, player.getPosition().y, player);
@@ -405,7 +455,7 @@ using namespace std;
 
 			/////////////////////////////////  obstruct  ////////////////////////////////
 
-			//coral.update(deltaTime,mapSpeedx);
+			coral.update(deltaTime,mapSpeedx);
 
 			//--------------------  HP  ---------------------//
 			calledhp.HPbossUpdate(deltaTime, bossDamage, checkHP, gameState);
@@ -450,7 +500,8 @@ using namespace std;
 		window.clear();
 		
 		//---game render---//
-			
+		if (gameState == playbutton)
+		{
 			window.draw(ocean1);
 			window.draw(ocean2);
 			window.draw(player);
@@ -460,8 +511,9 @@ using namespace std;
 				bullet.draw(window);
 			//window.draw(pauseButton);
 			host.draw(window);
-			//coral.draw(window);
-			//window.draw(HP);
+			coral.draw(window);
+		}
+			
 			if (gameState == endGame)
 			{
 				window.draw(scoreRect);
@@ -475,15 +527,18 @@ using namespace std;
 						scoreButton.setTexture(&scoreButtonTexture[1]);
 						scoreButton.setSize(sf::Vector2f(400.0f, 120.0f));
 						scoreButton.setPosition(sf::Vector2f(350.0f, 570.0f));
+						if (scoreButton.getGlobalBounds().intersects(mousePosition.getGlobalBounds()))
+						{
+								scoreButton.setTexture(&scoreButtonTexture[2]);
+								scoreButton.setSize(sf::Vector2f(400.0f, 120.0f));
+								scoreButton.setPosition(sf::Vector2f(350.0f, 570.0f));
+						}
 					}
 					if (scoreButton.getGlobalBounds().intersects(mousePosition.getGlobalBounds()) and sf::Mouse::isButtonPressed(sf::Mouse::Left))
 					{
-						scoreButton.setTexture(&scoreButtonTexture[2]);
-						scoreButton.setSize(sf::Vector2f(400.0f, 120.0f));
-						scoreButton.setPosition(sf::Vector2f(350.0f, 570.0f));
+						buttontheme.play();
 						isButtonOn = 0;
 						isHighScore = true;
-						
 					}
 					if (event.type == sf::Event::TextEntered && last_char != event.text.unicode)
 					{
@@ -492,6 +547,8 @@ using namespace std;
 							user_name = playerInput;
 							playerInput.clear();
 							saveScore = true;
+							//isButtonOn = 0;
+							//isHighScore = true;
 						}
 						else if (event.text.unicode == 8 && playerInput.getSize() >= 0)
 						{ // backspace delete
@@ -510,10 +567,6 @@ using namespace std;
 						last_char = event.text.unicode;
 						player_Name.setString(playerInput);
 					}
-					//else if (event.type == sf::Event::EventType::KeyReleased && last_char != ' ')
-					//{
-					//	last_char = ' ';
-					//}
 					 if (saveScore == true)
 						{
 							std::vector<pair<string, int > > eachscore;
@@ -532,7 +585,6 @@ using namespace std;
 						}
 				window.draw(player_Name);
 				}
-
 			}
 			if (gameState == menustate)
 			{
@@ -546,6 +598,7 @@ using namespace std;
 			}
 			while (isHighScore == true)
 			{
+				themesong.stop(); //<------------เพิ่มมาใหม่
 				sf::Event event;
 				while (window.pollEvent(event))
 				{
@@ -576,12 +629,12 @@ using namespace std;
 				}
 				fileReader.open("leaderBoard.txt");
 				do
-				{
+					{
 					fileReader >> word;
 					std::string first_token = word.substr(0, word.find(','));
 					int second_token = std::stoi(word.substr(word.find(',') + 1, word.length()));
 					keepscore[second_token] = first_token;
-				} while (fileReader.good());
+					} while (fileReader.good());
 				fileReader.close();
 				std::map<int, std::string >::iterator end = keepscore.end();
 				std::map<int, std::string >::iterator beg = keepscore.begin();
@@ -591,7 +644,7 @@ using namespace std;
 				for (std::map<int, std::string>::iterator it = end; it != beg; it--)
 				{
 					text1.setString(it->second);//name
-					text1.setPosition(450.0f, 170.0f + (85*currentDisplay));
+					text1.setPosition(480.0f, 170.0f + (85*currentDisplay));
 					window.draw(text1);
 					text1.setString(std::to_string(it->first)); //score
 					text1.setPosition(800.0f, 170.0f + (85 * currentDisplay));

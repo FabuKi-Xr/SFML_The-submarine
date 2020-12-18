@@ -2,25 +2,46 @@
 
 Collider::Collider()
 {
-
 }
 Collider::~Collider()
 {
 }
 
-void Collider::bulletAndBoss(std::vector<bullet>& bull, hostile &host, int& score, float& bossDamage,bool &checkHP)
+void Collider::bulletAndBoss(std::vector<bullet>& bull, hostile &host, int& score, float& bossDamage,bool &checkHP,sf::Texture *sulfilizerTexture)
 {
+    std::cout << "combo: " << combo << std::endl;
     for (int i = 0;i < bull.size();i++)
     {
             //คะเเนนที่ยิงได้เป็นเเบบสุ่ม เเต่ถ้าโดน หน้าเรือหรือคอนโซนเรือบริเวณด้านล่างจะ fix ที่ 3500
             if (bull[i].getGlobalBounds().intersects(host.hitbox1.getGlobalBounds()))
             {
                 checkHP = 1;
+                combo++;
                 std::cout << "crash into hitbox1" << std::endl;
                 bull.erase(bull.begin()+i);
                 score += 3500;
-                playerDamageToBoss = 12.5;
+                playerDamageToBoss = 5;
                 bossDamage = playerDamageToBoss;
+                if (isHitPlayer == false)
+                    {
+                        score += (80 * combo);
+                    }
+
+                scoreItemState = rand() % 10 + 1;
+                if (scoreItemState >= 4 && scoreItemState <= 6)
+                    { 
+                        j = 1; 
+                    }
+
+                else 
+                    { 
+                        j = 0; 
+                    }
+
+                for(int k = 0;k<j;k++)
+                    {
+                        host.sulfilizer.push_back(item(sulfilizerTexture, sf::Vector2u(3, 1), 0.1f, sf::Vector2f(host.body.getPosition().x + (rand() % 20), host.body.getPosition().y - (rand() % 20 + 15))));
+                    }
                 //boss.playerHitBossDamage(playerDamageToBoss);
                 //boss.damage = playerDamageToBoss;
                 break;
@@ -28,11 +49,29 @@ void Collider::bulletAndBoss(std::vector<bullet>& bull, hostile &host, int& scor
             if (bull[i].getGlobalBounds().intersects(host.hitbox2.getGlobalBounds()))
             {
                 checkHP = 1;
+                combo++;
                 std::cout << "crash into hitbox2" << std::endl;
                 bull.erase(bull.begin() + i);
                 score += rand()%2001+1900;
-                playerDamageToBoss = 10.0;
+                playerDamageToBoss = rand() % 4 + 2;
                 bossDamage = playerDamageToBoss;
+                if (isHitPlayer == false)
+                {
+                    score += (70 * combo);
+                }
+                if (scoreItemState >= 4 && scoreItemState <= 6)
+                {
+                    j = 1;
+                }
+                else
+                {
+                    j = 0;
+                }
+
+                for (int k = 0;k < j;k++)
+                {
+                    host.sulfilizer.push_back(item(sulfilizerTexture, sf::Vector2u(3, 1), 0.1f, sf::Vector2f(host.body.getPosition().x + (rand() % 20), host.body.getPosition().y - (rand() % 20 + 15))));
+                }
                 //boss.playerHitBossDamage(playerDamageToBoss);
                 //boss.damage = playerDamageToBoss;
                 break;
@@ -40,11 +79,29 @@ void Collider::bulletAndBoss(std::vector<bullet>& bull, hostile &host, int& scor
             if (bull[i].getGlobalBounds().intersects(host.hitbox3.getGlobalBounds()))
             {
                 checkHP = 1;
+                combo++;
                 std::cout << "crash into hitbox3" << std::endl;
                 bull.erase(bull.begin() + i);
                 score += rand()%1850+1700;
-                playerDamageToBoss = 10.0;
+                playerDamageToBoss = rand()%3 +2;
                 bossDamage = playerDamageToBoss;
+                if (isHitPlayer == false)
+                {
+                    score += (60 * combo);
+                }
+                if (scoreItemState >= 4 && scoreItemState <= 6)
+                {
+                    j = 1;
+                }
+                else
+                {
+                    j = 0;
+                }
+
+                for (int k = 0;k < j;k++)
+                {
+                    host.sulfilizer.push_back(item(sulfilizerTexture, sf::Vector2u(3, 1), 0.1f, sf::Vector2f(host.body.getPosition().x + (rand() % 20), host.body.getPosition().y - (rand() % 20 + 15))));
+                }
                 //boss.playerHitBossDamage(playerDamageToBoss);
                 //boss.damage = playerDamageToBoss;
                 break;
@@ -52,11 +109,29 @@ void Collider::bulletAndBoss(std::vector<bullet>& bull, hostile &host, int& scor
             if (bull[i].getGlobalBounds().intersects(host.hitbox4.getGlobalBounds()))
             {
                 checkHP = 1;
+                combo++;
                 std::cout << "crash into hitbox4" << std::endl;
                 bull.erase(bull.begin() + i);
-                score += rand()%1700+1499;
-                playerDamageToBoss= 10.0;
+                playerDamageToBoss= 1.0;
                 bossDamage = playerDamageToBoss;
+                score += rand() % 1700 + 1499;
+                if (isHitPlayer == false)
+                {
+                    score += (50 * combo);
+                }
+                if (scoreItemState >= 4 && scoreItemState <= 6)
+                {
+                    j = 1;
+                }
+                else
+                {
+                    j = 0;
+                }
+
+                for (int k = 0;k < j;k++)
+                {
+                    host.sulfilizer.push_back(item(sulfilizerTexture, sf::Vector2u(3, 1), 0.1f, sf::Vector2f(host.body.getPosition().x + (rand() % 20), host.body.getPosition().y - (rand() % 20 + 15))));
+                }
                 //boss.playerHitBossDamage(playerDamageToBoss);
                 //boss.damage = playerDamageToBoss;
                 break;
@@ -65,19 +140,25 @@ void Collider::bulletAndBoss(std::vector<bullet>& bull, hostile &host, int& scor
 }
 void Collider::bulletBossAndPlayer(hostile &host, sf::RectangleShape& player, float& playerDamage, bool& checkplayerHP)
 {
+    if (host.body.getGlobalBounds().intersects(player.getGlobalBounds()))
+    {
+        playerDamage = 10;
+    }
     for (int i = 0;i < host.missile.size();i++)
     {
         critical = rand() % 15 + 1;
         if (host.missile[i].getGlobalBounds().intersects(player.getGlobalBounds()))
         {
             checkplayerHP = 1;
+            isHitPlayer = true;
+            combo = 0;
             std::cout << "crash into player!" << std::endl;
             host.missile.erase(host.missile.begin() + i);
-            if (critical == 7)
+            if (critical == 7 || critical == 11)
             {
-                bossDamageToPlayer = rand() % 15 + 7;
+                bossDamageToPlayer = rand() % 9 + 5;
             }
-            else { bossDamageToPlayer = rand()% 10 + 5; }
+            else { bossDamageToPlayer = rand()% 7 + 3; }
             playerDamage = bossDamageToPlayer;
             critical = 0;
             break;
@@ -85,10 +166,35 @@ void Collider::bulletBossAndPlayer(hostile &host, sf::RectangleShape& player, fl
     }
 }
 
-//float Collider::returnDamage(float damage)
-//{
-//    return damage;
-//}
+void Collider::sulfilizerAndPlayer(hostile& host, std::vector<item>& item, sf::RectangleShape& player,int &score)
+{
+    for (int i = 0;i < host.sulfilizer.size();i++)
+    {
+        if (host.sulfilizer[i].getGlobalBounds().intersects(player.getGlobalBounds()))
+        {
+            host.sulfilizer.erase(host.sulfilizer.begin() + i);
+            score += rand() % 101 + 10;
+            break;
+        }
+    }
+}
+
+
+void Collider::update(float deltaTime,hostile &host)
+{
+    for (item& item : host.sulfilizer)
+    {
+        int i = 0;
+        if (host.sulfilizer[i].sulfilizerGetPosition().y >= 5)
+        {
+            host.sulfilizer.erase(host.sulfilizer.begin() + i);
+        }
+        else item.updateSulfilizer(deltaTime);
+        //std::cout << "missile size: " << missile.size() << std::endl;
+        i++;
+
+    }
+}
 
 
 
