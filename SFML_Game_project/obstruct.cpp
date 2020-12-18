@@ -8,7 +8,7 @@ obstruct::obstruct(sf::Texture *texture1, sf::Texture* texture2)
 		{
 			randX = rand() % 500 + 300; 
 			coral.push_back(drawobstacle(texture1, sf::Vector2f(randX+ 1080, 400.0f)));
-			std::cout << "x: " << coral[i].obstacleGetPosition().x << "y: " << coral[i].obstacleGetPosition().y << std::endl;
+			//std::cout << "x: " << coral[i].obstacleGetPosition().x << "y: " << coral[i].obstacleGetPosition().y << std::endl;
 			coralCount++;
 			break;
 		}
@@ -16,7 +16,7 @@ obstruct::obstruct(sf::Texture *texture1, sf::Texture* texture2)
 		{
 			randX = rand() % 500 + 300;
 			coral.push_back(drawobstacle(texture2, sf::Vector2f(randX + 1080, 400.0f)));
-			std::cout << "x: " << coral[i].obstacleGetPosition().x << "y: " << coral[i].obstacleGetPosition().y << std::endl;
+			//std::cout << "x: " << coral[i].obstacleGetPosition().x << "y: " << coral[i].obstacleGetPosition().y << std::endl;
 			coralCount++;
 			break;
 		}

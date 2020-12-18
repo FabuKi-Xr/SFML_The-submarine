@@ -12,9 +12,9 @@ public:
 	Collider();
 	~Collider();
 	
-	void bulletAndBoss(std::vector<bullet> &bull,hostile &host,int &score,float &bossDamage, bool &checkHP, sf::Texture* sulfilizerTexture);
+	void bulletAndBoss(std::vector<bullet> &bull,hostile &host,int &score,float &bossDamage, bool &checkHP, sf::Texture* sulfilizerTexture, int& combo);
 
-	void bulletBossAndPlayer(hostile& host, sf::RectangleShape& player, float& playerDamage, bool& checkPlayerHP);
+	void bulletBossAndPlayer(hostile& host, sf::RectangleShape& player, float& playerDamage, bool& checkPlayerHP, int& combo);
 	
 	void sulfilizerAndPlayer(hostile& host,std::vector<item>& item, sf::RectangleShape& player,int &score);
 
@@ -28,7 +28,6 @@ private:
 	float bossDamageToPlayer;
 	float playerDamageToBoss;
 	bool isHitPlayer = false; // are player hit by boss's missile?
-	int combo = 0;
 
 	sf::Texture sulfilizerTexture;
 	int scoreItemState = 0;

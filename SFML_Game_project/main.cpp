@@ -124,16 +124,28 @@ using namespace std;
 	float mapSpeedx = 0.1f;
 
 	//////  pause //////
-	/*sf::Texture pauseButtonTexture;
+	bool isPaused = false;
+	sf::Texture pauseButtonTexture;
 	if (!pauseButtonTexture.loadFromFile("img/pause.png"))
 	{
 		std::cout << "cant open pause.png" << std::endl;
 	}
+	sf::Texture pausePageTexture;
+	if (!pausePageTexture.loadFromFile("img/pausePage.png"))
+	{
+		std::cout << "cant open pausePage.png" << std::endl;
+	}
+	pausePageTexture.setSmooth(true);
+	sf::RectangleShape pausePage;
+	pausePage.setTexture(&pausePageTexture);
+	pausePage.setSize(sf::Vector2f(1080.0f, 720.0f));
+	pausePage.setPosition(sf::Vector2f(0.0f,0.0f));
+
 	pauseButtonTexture.setSmooth(true);
 	sf::RectangleShape pauseButton;
 	pauseButton.setTexture(&pauseButtonTexture);
 	pauseButton.setSize(sf::Vector2f(100.0f, 100.0f));
-	pauseButton.setPosition(sf::Vector2f(980.0f, 20.0f));*/
+	pauseButton.setPosition(sf::Vector2f(980.0f, 620.0f));
 	//pauseButton.setOrigin(pauseButton.getPosition().x / 2, pauseButton.getPosition().y / 2);
 
 
@@ -221,6 +233,16 @@ using namespace std;
 	{
 		std::cout << "cant open cookie run font" << std::endl;
 	}
+	int combo =0;
+
+	sf::Text comboOnscreen;
+	comboOnscreen.setFont(nameScore);
+	comboOnscreen.setCharacterSize(48);
+	comboOnscreen.setOutlineThickness(1.0f);
+	comboOnscreen.setOutlineColor(sf::Color::White);
+	comboOnscreen.setFillColor(sf::Color(189, 67, 200));
+	comboOnscreen.setPosition(sf::Vector2f(20.0f, 40.0f));
+
 	Keyname.setCharacterSize(40);
 	Keyname.setString(" ");
 	Keyname.setFont(nameScore);
@@ -317,6 +339,9 @@ using namespace std;
 	playScore.setCharacterSize(35);    
 	playScore.setPosition(sf::Vector2f(490.0f,225.0f));
 
+
+	//////// blueda ///////
+	sf::Texture blueda;
 	/////////////////// item ///////////////////////
 	sf::Texture sulfilizerTexture;
 	if (!sulfilizerTexture.loadFromFile("img/diamondSprite.png"))
@@ -342,7 +367,10 @@ using namespace std;
 	////////////////////--------------------------------------------->>>  Game  <<<--------------------------------------------------/////////////////////////////////////////////// 
 	while (window.isOpen()) 
 	{
-		
+		if (pauseButton.getGlobalBounds().intersects(mousePosition.getGlobalBounds()) and sf::Mouse::isButtonPressed(sf::Mouse::Left) && gameState != menustate)
+		{
+			isPaused = !isPaused;
+		}
 		deltaTime = cl.restart().asSeconds();
 		if (deltaTime > 1.0f / 60.0f) { deltaTime = 1.0f / 60.0f; }
 		sf::Event event;
@@ -380,7 +408,11 @@ using namespace std;
 			isGameOn = true;
 			themesong.stop();
 		}
-		if (gameState == playbutton)
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P))
+		{
+			isPaused = !isPaused;
+		}
+		if (gameState == playbutton && isPaused != true)
 		{
 			if (isSongOpen == false)
 			{
@@ -419,7 +451,7 @@ using namespace std;
 					bullet_time.restart();
 				}
 			}
-			collide.bulletAndBoss(bullet_vec, host, score, bossDamage, checkHP, &sulfilizerTexture);
+			collide.bulletAndBoss(bullet_vec, host, score, bossDamage, checkHP, &sulfilizerTexture,combo);
 			collide.sulfilizerAndPlayer(host, host.sulfilizer, player, score);
 			for (bullet& bullet : bullet_vec)
 			{
@@ -446,7 +478,7 @@ using namespace std;
 			//if(boss_time == 0) // ถ้าฆ่าลูกสมุนหมดเเล้ว/*{		}*/
 
 			host.canMissileShoot(deltaTime, 900.0f, &hostile_bullet);
-			collide.bulletBossAndPlayer(host, playerHitbox, playerDamage, checkPlayerHP);
+			collide.bulletBossAndPlayer(host, playerHitbox, playerDamage, checkPlayerHP,combo);
 
 			if (gameState != endGame)
 			{
@@ -505,11 +537,11 @@ using namespace std;
 			window.draw(ocean1);
 			window.draw(ocean2);
 			window.draw(player);
-			window.draw(playerHitbox);
+			window.draw(playerHitbox); 
 			calledhp.draw(window);
 			for (bullet& bullet : bullet_vec)
 				bullet.draw(window);
-			//window.draw(pauseButton);
+			window.draw(pauseButton);
 			host.draw(window);
 			coral.draw(window);
 		}
@@ -596,7 +628,7 @@ using namespace std;
 				menu.menutheme.stop();
 				themesong.setLoop(true);
 			}
-			while (isHighScore == true)
+			while (isHighScore == true && gameState == endGame)
 			{
 				themesong.stop(); //<------------เพิ่มมาใหม่
 				sf::Event event;
@@ -657,6 +689,11 @@ using namespace std;
 					}
 				}
 				window.display();
+			}
+			if (isPaused == true)
+			{
+				window.draw(pausePage);
+				window.draw(pauseButton);
 			}
 		window.display();
 	}

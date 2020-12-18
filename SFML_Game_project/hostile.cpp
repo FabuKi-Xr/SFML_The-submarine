@@ -65,7 +65,6 @@ void hostile::canMissileShoot(float deltaTime, float missileCooldown, sf::Textur
         isShootting = rand() % 3 + 1;
         if (this->missileCooldown >= missileCooldown)
         {
-            //this->missileCooldown -= missileCooldown;
             if (isShootting < 3)
             {
                 missileBossSound.stop();
@@ -73,7 +72,6 @@ void hostile::canMissileShoot(float deltaTime, float missileCooldown, sf::Textur
                 missileBossSound.play();
             }
             bull_boss.restart();
-            //std::cout << "[boss]missile has been released" << std::endl;
         }
     }  
 
@@ -93,10 +91,6 @@ void  hostile::update(float deltaTime,float posPlayer, sf::RectangleShape& playe
     {
         body.move(-velocity * deltaTime);
     }
-
-    //std::cout << "\nhostile position(x) : " << body.getPosition().x << std::endl;
-
-    //ด่าน 1 40 ด่าน 2 75 ด่าน 3 100
     if (direction == 0) 
     {
         body.move(0,-40.0f*deltaTime);
@@ -132,7 +126,6 @@ void  hostile::update(float deltaTime,float posPlayer, sf::RectangleShape& playe
             missile.erase(missile.begin() + i);
         }
         else bullet.update_bullet_hostile(deltaTime);
-        //std::cout << "missile size: " << missile.size() << std::endl;
         i++;
         
     }
@@ -144,11 +137,9 @@ void  hostile::update(float deltaTime,float posPlayer, sf::RectangleShape& playe
             sulfilizer.erase(sulfilizer.begin() + i);
         }
         else item.updateSulfilizer(deltaTime);
-        //std::cout << "missile size: " << missile.size() << std::endl;
         i++;
 
     }
-    //std::cout << "missile size: " << missile.size()<<std::endl;
 }
 void hostile::draw(sf::RenderWindow& window)
 {

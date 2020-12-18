@@ -7,9 +7,9 @@ Collider::~Collider()
 {
 }
 
-void Collider::bulletAndBoss(std::vector<bullet>& bull, hostile &host, int& score, float& bossDamage,bool &checkHP,sf::Texture *sulfilizerTexture)
+void Collider::bulletAndBoss(std::vector<bullet>& bull, hostile &host, int& score, float& bossDamage,bool &checkHP,sf::Texture *sulfilizerTexture,int &combo)
 {
-    std::cout << "combo: " << combo << std::endl;
+    //std::cout << "combo: " << combo << std::endl;
     for (int i = 0;i < bull.size();i++)
     {
             //คะเเนนที่ยิงได้เป็นเเบบสุ่ม เเต่ถ้าโดน หน้าเรือหรือคอนโซนเรือบริเวณด้านล่างจะ fix ที่ 3500
@@ -17,7 +17,6 @@ void Collider::bulletAndBoss(std::vector<bullet>& bull, hostile &host, int& scor
             {
                 checkHP = 1;
                 combo++;
-                std::cout << "crash into hitbox1" << std::endl;
                 bull.erase(bull.begin()+i);
                 score += 3500;
                 playerDamageToBoss = 5;
@@ -42,15 +41,12 @@ void Collider::bulletAndBoss(std::vector<bullet>& bull, hostile &host, int& scor
                     {
                         host.sulfilizer.push_back(item(sulfilizerTexture, sf::Vector2u(3, 1), 0.1f, sf::Vector2f(host.body.getPosition().x + (rand() % 20), host.body.getPosition().y - (rand() % 20 + 15))));
                     }
-                //boss.playerHitBossDamage(playerDamageToBoss);
-                //boss.damage = playerDamageToBoss;
                 break;
             }
             if (bull[i].getGlobalBounds().intersects(host.hitbox2.getGlobalBounds()))
             {
                 checkHP = 1;
                 combo++;
-                std::cout << "crash into hitbox2" << std::endl;
                 bull.erase(bull.begin() + i);
                 score += rand()%2001+1900;
                 playerDamageToBoss = rand() % 4 + 2;
@@ -72,15 +68,12 @@ void Collider::bulletAndBoss(std::vector<bullet>& bull, hostile &host, int& scor
                 {
                     host.sulfilizer.push_back(item(sulfilizerTexture, sf::Vector2u(3, 1), 0.1f, sf::Vector2f(host.body.getPosition().x + (rand() % 20), host.body.getPosition().y - (rand() % 20 + 15))));
                 }
-                //boss.playerHitBossDamage(playerDamageToBoss);
-                //boss.damage = playerDamageToBoss;
                 break;
             }
             if (bull[i].getGlobalBounds().intersects(host.hitbox3.getGlobalBounds()))
             {
                 checkHP = 1;
                 combo++;
-                std::cout << "crash into hitbox3" << std::endl;
                 bull.erase(bull.begin() + i);
                 score += rand()%1850+1700;
                 playerDamageToBoss = rand()%3 +2;
@@ -102,15 +95,12 @@ void Collider::bulletAndBoss(std::vector<bullet>& bull, hostile &host, int& scor
                 {
                     host.sulfilizer.push_back(item(sulfilizerTexture, sf::Vector2u(3, 1), 0.1f, sf::Vector2f(host.body.getPosition().x + (rand() % 20), host.body.getPosition().y - (rand() % 20 + 15))));
                 }
-                //boss.playerHitBossDamage(playerDamageToBoss);
-                //boss.damage = playerDamageToBoss;
                 break;
             }
             if (bull[i].getGlobalBounds().intersects(host.hitbox4.getGlobalBounds()))
             {
                 checkHP = 1;
                 combo++;
-                std::cout << "crash into hitbox4" << std::endl;
                 bull.erase(bull.begin() + i);
                 playerDamageToBoss= 1.0;
                 bossDamage = playerDamageToBoss;
@@ -132,13 +122,11 @@ void Collider::bulletAndBoss(std::vector<bullet>& bull, hostile &host, int& scor
                 {
                     host.sulfilizer.push_back(item(sulfilizerTexture, sf::Vector2u(3, 1), 0.1f, sf::Vector2f(host.body.getPosition().x + (rand() % 20), host.body.getPosition().y - (rand() % 20 + 15))));
                 }
-                //boss.playerHitBossDamage(playerDamageToBoss);
-                //boss.damage = playerDamageToBoss;
                 break;
             }
     }
 }
-void Collider::bulletBossAndPlayer(hostile &host, sf::RectangleShape& player, float& playerDamage, bool& checkplayerHP)
+void Collider::bulletBossAndPlayer(hostile &host, sf::RectangleShape& player, float& playerDamage, bool& checkplayerHP, int& combo)
 {
     if (host.body.getGlobalBounds().intersects(player.getGlobalBounds()))
     {
@@ -152,7 +140,6 @@ void Collider::bulletBossAndPlayer(hostile &host, sf::RectangleShape& player, fl
             checkplayerHP = 1;
             isHitPlayer = true;
             combo = 0;
-            std::cout << "crash into player!" << std::endl;
             host.missile.erase(host.missile.begin() + i);
             if (critical == 7 || critical == 11)
             {
