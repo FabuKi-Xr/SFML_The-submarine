@@ -160,7 +160,7 @@ void Collider::sulfilizerAndPlayer(hostile& host, std::vector<item>& item, sf::R
         if (host.sulfilizer[i].getGlobalBounds().intersects(player.getGlobalBounds()))
         {
             host.sulfilizer.erase(host.sulfilizer.begin() + i);
-            score += rand() % 101 + 10;
+            score += rand() % 4001 + 1000;
             break;
         }
     }

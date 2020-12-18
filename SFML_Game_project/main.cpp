@@ -445,7 +445,6 @@ using namespace std;
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
 				{
 					missileSound.stop();
-					printf("\nMissile was released!\n");
 					bullet_vec.push_back(bullet(&bullet_texture, sf::Vector2u(2, 1), 0.05f, sf::Vector2f(player.getPosition().x + 25, player.getPosition().y + 35)));
 					missileSound.play();
 					bullet_time.restart();
